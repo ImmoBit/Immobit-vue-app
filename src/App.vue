@@ -16,7 +16,7 @@
           </v-col>
           <!-- save,sign in/up section -->
           <v-col align="end" cols="9">
-            <v-menu eager id="menu" offset-x :close-on-click="true" :close-on-content-click="false"
+            <v-menu eager id="menu" offset-x :close-on-content-click="openSavedHouses"
               :disabled="savedHouses.length == 0">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" class="mt-6" large icon>
@@ -25,7 +25,7 @@
                   </v-badge>
                 </v-btn>
               </template>
-              <saved-houses :savedHouses="savedHouses"></saved-houses>
+              <saved-houses @close="openSavedHouses = false" :savedHouses="savedHouses"></saved-houses>
             </v-menu>
 
             <v-menu eager v-if="!authenticated" offset-y>
@@ -144,7 +144,8 @@ export default {
     dialog3: false,
     saved: false,
     value: 1,
-    isIntersecting: false
+    isIntersecting: false,
+    openSavedHouses: true
   }),
   computed: {
     savedHouses() {

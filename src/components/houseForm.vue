@@ -79,10 +79,7 @@
                     height="50" />
                   <span> {{ errors[0] }}</span>
                 </validation-provider>
-                <validation-provider v-slot="{ errors }" name="files" :rules="{
-                  required: true,
-                  min: 5
-                }">
+                <validation-provider v-slot="{ errors }" name="files" >
                   <v-file-input v-model="files" @input="setImgsSrc" @change="(files) => setImgsSrc(files)"
                     accept="image/png, image/jpeg, image/bmp" color="deep-purple accent-4" counter label="Images"
                     multiple placeholder="Select your images" prepend-icon="mdi-camera" outlined :show-size="1000">
@@ -189,8 +186,8 @@ export default {
     userId() {
       return this.$store.getters.getUid;
     },
-    wilaya() {
-      return this.house.city;
+    cityName() {
+      return this.house.city.slice(4);
     }
   },
   methods: {
@@ -220,21 +217,21 @@ export default {
     },
     async submit() {
       var houseForm = new FormData();
-      houseForm.append("city", this.wilaya.slice(4));
+      houseForm.append("city", this.cityName);
       houseForm.append("kitchen", this.piece.includes("Cuisine"));
       houseForm.append("bathroom", this.piece.includes("Salle de bain"));
       houseForm.append("user", this.userId);
-      houseForm.append("price", this.house.price.replace(/\s+/g, ""));
+      houseForm.append("price", this.house.price.toString().replace(/\s+/g, ""));
       houseForm.append("image1", this.files[0]);
-      houseForm.append("image2", this.files[1]);
-      houseForm.append("image3", this.files[2]);
-      houseForm.append("image4", this.files[3]);
-      houseForm.append("image5", this.files[4]);
+      /*houseForm.append("image2", null);
+      houseForm.append("image3", null);
+      houseForm.append("image4", null);
+      houseForm.append("image5", null);*/
 
       for (const key in this.house) {
         if (
           Object.hasOwnProperty.call(this.house, key) &&
-          houseForm.get(key) == undefined
+          houseForm.get(key) == undefined && !key.includes('image')
         ) {
           houseForm.append(key, this.house[key]);
         }
@@ -250,7 +247,7 @@ export default {
           .then(res => console.log(res))
           .catch(error => console.log(error));
       } else {
-        await axios.patch("/house-update/" + this.house.id, houseForm)
+        await axios.patch("/house-update/" + this.house.id+"/", houseForm)
           .then(res => console.log(res))
           .catch(error => console.log(error));
       }
@@ -259,7 +256,7 @@ export default {
 
   },
   watch: {
-    wilaya(val) {
+    cityName(val) {
       //  dirha ki ykhayar mdina
       if (val == null) {
         this.dairaItems = [];
