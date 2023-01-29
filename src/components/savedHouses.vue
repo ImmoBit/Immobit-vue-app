@@ -41,7 +41,7 @@ export default {
   methods: {
     goHouse(savedHouse) {
       this.$router.push({ name: "House", params: { id: savedHouse.id } });
-      this.$emit('close')
+      this.$emit("close");
     },
     async remHouse(savedHouse) {
       await this.$store.dispatch("updateSavedHouses", savedHouse, false);

@@ -7,9 +7,9 @@
             <v-col class="ma-0 pa-0" cols="5">
               <v-carousel height="250" hide-delimiters>
                 <v-carousel-item
-                  v-for="(item, i) in items"
+                  v-for="(image, i) in house.images"
                   :key="i"
-                  :src="item"
+                  :src="image"
                   @click="goHousePage"
                 ></v-carousel-item>
               </v-carousel>
@@ -71,8 +71,7 @@ export default {
     house: Object
   },
   data: () => ({
-    show: false,
-    items: []
+    show: false
   }),
   computed: {
     saved() {
@@ -125,13 +124,6 @@ export default {
       await this.$store.commit("SET_HOUSE", this.house);
       this.$router.push("/house/" + this.id).catch(() => {});
     }
-  },
-  created() {
-    this.items.push(this.house.image1);
-    this.items.push(this.house.image2);
-    this.items.push(this.house.image3);
-    this.items.push(this.house.image4);
-    this.items.push(this.house.image5);
   }
 };
 </script>

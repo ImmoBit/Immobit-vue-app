@@ -5,18 +5,55 @@
         <v-container class="px-7">
           <v-row>
             <v-col :cols="isPhone ? 12 : 6">
-              <v-select prepend-inner-icon="mdi-map-marker" full-width height="50" label="Wilaya" hide-details
-                disable-lookup filled dense rounded :items="wilNames" v-model="wilaya">
+              <v-select
+                prepend-inner-icon="mdi-map-marker"
+                full-width
+                height="50"
+                label="Wilaya"
+                hide-details
+                disable-lookup
+                filled
+                dense
+                rounded
+                :items="wilNames"
+                v-model="wilaya"
+              >
               </v-select>
             </v-col>
             <v-col :cols="isPhone ? 12 : 6">
-              <v-select prepend-inner-icon="mdi-map-marker-plus" full-width height="50" label="Daira" small-chips
-                hide-details disable-lookup dense filled rounded :disabled="!dairas.length" multiple :items="dairas"
-                v-model="daira"></v-select>
+              <v-select
+                prepend-inner-icon="mdi-map-marker-plus"
+                full-width
+                height="50"
+                label="Daira"
+                small-chips
+                hide-details
+                disable-lookup
+                dense
+                filled
+                rounded
+                :disabled="!dairas.length"
+                multiple
+                :items="dairas"
+                v-model="daira"
+              ></v-select>
             </v-col>
             <v-col class="mx-auto" :cols="isPhone ? 12 : 6">
-              <v-select prepend-inner-icon="mdi-home-modern" full-width height="50" label="Type" hide-details
-                disable-lookup filled dense rounded small-chips multiple :items="types" v-model="type">
+              <v-select
+                prepend-inner-icon="mdi-home-modern"
+                full-width
+                height="50"
+                label="Type"
+                hide-details
+                disable-lookup
+                filled
+                dense
+                rounded
+                small-chips
+                multiple
+                :items="types"
+                v-model="type"
+              >
                 <template v-slot:selection="{ item, index }">
                   <v-chip x-small v-if="index === 0">
                     <span>{{ item }}</span>
@@ -33,15 +70,29 @@
       <v-row>
         <v-col class="py-0" align="center">
           <v-radio-group class="mt-0" hide-details v-model="radioGroup">
-            <v-radio v-for="(type, i) in ['Location', 'Achat']" :key="i" :class="i == 0 ? 'mx-auto' : 'pr-5 mx-auto'"
-              :label="type" :value="type"></v-radio>
+            <v-radio
+              v-for="(type, i) in ['Location', 'Achat']"
+              :key="i"
+              :class="i == 0 ? 'mx-auto' : 'pr-5 mx-auto'"
+              :label="type"
+              :value="type"
+            ></v-radio>
           </v-radio-group>
         </v-col>
       </v-row>
       <v-row class="mt-2">
         <v-col align="center">
-          <v-btn class="white--text" x-large height="40" width="180" rounded color="primary" @click="searchState"
-            :loading="loader" :disabled="loader">
+          <v-btn
+            class="white--text"
+            x-large
+            height="40"
+            width="180"
+            rounded
+            color="primary"
+            @click="searchState"
+            :loading="loader"
+            :disabled="loader"
+          >
             Recherchez
             <v-icon class="ml-2 pr-0">mdi-magnify</v-icon>
           </v-btn>
@@ -134,6 +185,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

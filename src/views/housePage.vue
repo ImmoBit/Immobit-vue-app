@@ -3,13 +3,17 @@
     <!-- Photos section row -->
     <v-row no-gutters>
       <div class="display-1 text--secondary mb-1">
-        <v-icon large>mdi-home-modern</v-icon>{{ house.type }} in
+        <v-icon large>mdi-home-modern</v-icon>{{ house.type }} à
         {{ house.city }}
       </div>
       <v-col cols="12">
         <v-row no-gutters>
-          <v-col v-for="(card, index) in cards" :key="index" :cols="card.flex">
-            <v-img :src="card.src" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="280px">
+          <v-col v-for="(card, i) in cards" :key="i" :cols="card.flex">
+            <v-img
+              :src="house.images[i]"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="280px"
+            >
             </v-img>
           </v-col>
         </v-row>
@@ -27,19 +31,22 @@
           </div>
         </v-chip>
         <div class="ml-4 text--secondary">
-          <p class="mt-3"> • {{ house.rooms }} Rooms</p>
+          <p class="mt-3">• {{ house.rooms }} Rooms</p>
 
           <p class="font-weight-normal">
             <v-icon>mdi-map-marker</v-icon> {{ house.address }}
           </p>
 
-          <p class="pb-0 mb-0">
-            <v-icon>mdi-overscan</v-icon> 120 m²
-          </p>
+          <p class="pb-0 mb-0"><v-icon>mdi-overscan</v-icon> 120 m²</p>
           <!-- Tags-->
           <div class="pl-4">
             <v-chip-group active-class="primary--text" column>
-              <v-chip outlined v-for="tag in tags" :key="tag.name" :color="tag.color">
+              <v-chip
+                outlined
+                v-for="tag in tags"
+                :key="tag.name"
+                :color="tag.color"
+              >
                 <v-icon left>{{ tag.icon }}</v-icon>
                 {{ tag.name }}
               </v-chip>
@@ -58,7 +65,11 @@
     </v-row>
     <v-row class="mx-0">
       <v-col>
-        <v-sheet class="d-flex flex-column align-center mx-auto mt-5 mb-12" width="300" elevation="1">
+        <v-sheet
+          class="d-flex flex-column align-center mx-auto mt-5 mb-12"
+          width="300"
+          elevation="1"
+        >
           <v-avatar class="mb-5" size="128">
             <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
           </v-avatar>
@@ -86,23 +97,18 @@ export default {
     house: {},
     cards: [
       {
-        src: "https://kerya.herokuapp.com",
         flex: 8
       },
       {
-        src: "https://kerya.herokuapp.com",
         flex: 4
       },
       {
-        src: "https://kerya.herokuapp.com",
         flex: 4
       },
       {
-        src: "https://kerya.herokuapp.com",
         flex: 4
       },
       {
-        src: "https://kerya.herokuapp.com",
         flex: 4
       }
     ],
@@ -154,25 +160,28 @@ export default {
     return {
       title: `F${this.house.rooms} | ${this.house.address}`,
       link: [
-        { rel: 'canonical', href: location.protocol + '//' + location.host + location.pathname },
+        {
+          rel: "canonical",
+          href: location.protocol + "//" + location.host + location.pathname
+        }
       ],
       meta: [
-      { hid: 'og:type', property: 'og:type', content: 'page' },
-      { hid: 'og:url', property: 'og:url', content: location.protocol + '//' + location.host + location.pathname },
-      { hid: 'og:image', property: 'og:image', content: this.house.image1 },
+        { hid: "og:type", property: "og:type", content: "page" },
+        {
+          hid: "og:url",
+          property: "og:url",
+          content: location.protocol + "//" + location.host + location.pathname
+        },
+        { hid: "og:image", property: "og:image", content: this.house.image1 }
       ]
     };
   },
-  async created(){
-      const id =this.$route.params.id
-      this.house = await apiRequests.getHouse(id)
-      //await this.$store.dispatch('getHouse', id)
-      for (let i = 0; i < this.cards.length; i++) {
-              this.cards[i].src = this.house["image"+Number(i+1)];
-      }
+  async created() {
+    const id = this.$route.params.id;
+    this.house = await apiRequests.getHouse(id);
     Axios.get("/users/users/" + this.house.user).then(res => {
       this.user = res.data;
     });
-  },
+  }
 };
 </script>

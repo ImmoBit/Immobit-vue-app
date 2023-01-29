@@ -1,6 +1,11 @@
 <template>
   <v-card max-width="350">
-    <v-img :src="house.image1" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="300px" width="350px">
+    <v-img
+      :src="house.images[0]"
+      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+      height="300px"
+      width="350px"
+    >
     </v-img>
 
     <v-card-actions>
@@ -66,34 +71,33 @@ export default {
         this.dates = this.dates.concat(res.data[index].dates);
       }
     });*/
-    for (let i = 1; i < 6; i++) {
-      if (this.house["image" + i])
-        this.setImgSrc(this.house["image" + i])
+    for (const image of this.house.images) {
+      if (image) this.setImgSrc(image);
     }
   },
   methods: {
     async setImgSrc(url) {
       //const reader = new FileReader();
+
       const response = await fetch(url);
       console.log(response);
       const data = await response.blob();
       const metadata = {
-        type: 'image/jpg',
+        type: "image/jpeg"
       };
       /*reader.onload = (event) => {
         this.imgSrc = (event.target).result;
       };*/
-      const file = new File([data], 'test.jpg', metadata);
+      const file = new File([data], "test.jpg", metadata);
       //reader.readAsDataURL(file);
-      this.images.push(file)
+      this.images.push(file);
     },
     deleteHouse() {
-      const id = this.house.id
+      const id = this.house.id;
       Axios.delete("/house-delete/" + id).then(res => {
         console.log(res);
-      })
+      });
     }
   }
-
 };
 </script>

@@ -1,5 +1,5 @@
 import axios from "axios";
-axios.defaults.baseURL = "https://kerya.herokuapp.com/api/auth";
+axios.defaults.baseURL = "http://3.249.239.202:8080/api/auth";
 export default {
   signIn(authData) {
     return axios

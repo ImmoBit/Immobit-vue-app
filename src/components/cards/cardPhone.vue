@@ -2,7 +2,7 @@
   <v-card elevation="1">
     <v-carousel height="350" hide-delimiters>
       <v-carousel-item
-        v-for="(image, i) in images"
+        v-for="(image, i) in house.images"
         :key="i"
         :src="image"
         class="text-right"

@@ -12,20 +12,37 @@
           <!-- Title -->
           <v-col @click="goHome" class="pl-0 mt-5" cols="2">
             <span class="display-1 brown--text text--lighten-2">Immo</span>
-            <span class="display-1 blue--text text--lighten-2 mx-auto">Bit</span>
+            <span class="display-1 blue--text text--lighten-2 mx-auto"
+              >Bit</span
+            >
           </v-col>
           <!-- save,sign in/up section -->
           <v-col align="end" cols="9">
-            <v-menu eager id="menu" offset-x :close-on-content-click="openSavedHouses"
-              :disabled="savedHouses.length == 0">
+            <v-menu
+              eager
+              id="menu"
+              offset-x
+              :close-on-content-click="openSavedHouses"
+              :disabled="savedHouses.length == 0"
+            >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" class="mt-6" large icon>
                   <v-icon>mdi-heart</v-icon>
-                  <v-badge eager v-if="savedHouses.length" dot bottom color="red" :content="savedHouses.length">
+                  <v-badge
+                    eager
+                    v-if="savedHouses.length"
+                    dot
+                    bottom
+                    color="red"
+                    :content="savedHouses.length"
+                  >
                   </v-badge>
                 </v-btn>
               </template>
-              <saved-houses @close="openSavedHouses = false" :savedHouses="savedHouses"></saved-houses>
+              <saved-houses
+                @close="openSavedHouses = false"
+                :savedHouses="savedHouses"
+              ></saved-houses>
             </v-menu>
 
             <v-menu eager v-if="!authenticated" offset-y>
@@ -42,7 +59,10 @@
                         Sign up
                       </v-list-item-title>
                     </template>
-                    <sign-up v-if="dialog1" @dialog-false="dialog1 = false"></sign-up>
+                    <sign-up
+                      v-if="dialog1"
+                      @dialog-false="dialog1 = false"
+                    ></sign-up>
                   </v-dialog>
                 </v-list-item>
 
@@ -53,7 +73,10 @@
                         Sign in
                       </v-list-item-title>
                     </template>
-                    <sign-in v-if="dialog2" @dialog-false="dialog2 = false"></sign-in>
+                    <sign-in
+                      v-if="dialog2"
+                      @dialog-false="dialog2 = false"
+                    ></sign-in>
                   </v-dialog>
                 </v-list-item>
               </v-list>
@@ -66,7 +89,10 @@
               </template>
               <v-list>
                 <v-list-item>
-                  <router-link style="text-decoration: none; color: inherit;" :to="{ name: 'admin-panel' }">
+                  <router-link
+                    style="text-decoration: none; color: inherit;"
+                    :to="{ name: 'admin-panel' }"
+                  >
                     <v-list-item-title>
                       <v-btn small outlined color="primary">Admin</v-btn>
                     </v-list-item-title>

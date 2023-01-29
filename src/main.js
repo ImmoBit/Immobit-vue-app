@@ -38,7 +38,7 @@ Vue.component("ValidationObserver", ValidationObserver);
 Vue.use(VueMeta);
 
 Vue.config.productionTip = false;
-Axios.defaults.baseURL = "https://kerya.herokuapp.com/api";
+Axios.defaults.baseURL = "http://3.249.239.202:8080/api";
 
 new Vue({
   router,
