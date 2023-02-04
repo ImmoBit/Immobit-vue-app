@@ -7,7 +7,7 @@
             <v-col class="ma-0 pa-0" cols="5">
               <v-carousel height="250" hide-delimiters>
                 <v-carousel-item
-                  v-for="(image, i) in house.images"
+                  v-for="(image, i) in images"
                   :key="i"
                   :src="image"
                   @click="goHousePage"
@@ -71,7 +71,14 @@ export default {
     house: Object
   },
   data: () => ({
-    show: false
+    show: false,
+    images: [
+    require("@/assets/1.jpg"),
+    require("@/assets/2.jpg"),    
+    require("@/assets/3.jpg"),
+    require("@/assets/4.jpg"),    
+    require("@/assets/5.jpg"),
+    ]
   }),
   computed: {
     saved() {

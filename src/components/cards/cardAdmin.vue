@@ -1,7 +1,7 @@
 <template>
   <v-card max-width="350">
     <v-img
-      :src="house.images[0]"
+      :src="images[0]"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
       height="300px"
       width="350px"
@@ -52,7 +52,13 @@ export default {
     namesDates: [],
     pickedDates: [],
     dates: [],
-    images: []
+    images: [
+      require("@/assets/1.jpg"),
+      require("@/assets/2.jpg"),    
+      require("@/assets/3.jpg"),
+      require("@/assets/4.jpg"),    
+      require("@/assets/5.jpg"),
+    ],
   }),
   props: {
     house: Object

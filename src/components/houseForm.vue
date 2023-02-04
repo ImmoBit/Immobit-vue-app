@@ -320,12 +320,10 @@ export default {
     async submit() {
       let images = [];
       const uploadURL0 =
-        "https://1973hw9du7.execute-api.eu-west-1.amazonaws.com/uploads";
+        "https://jyuqlb99k5.execute-api.eu-west-1.amazonaws.com/uploads";
       for (const file of this.files) {
         const randomID = parseInt(Math.random() * 100000);
-        var {
-          data: { uploadURL }
-        } = await axios.get(uploadURL0, {
+        var { data: { uploadURL } } = await axios.get(uploadURL0, {
           params: { imageId: randomID, requestType: "put" }
         });
         try {

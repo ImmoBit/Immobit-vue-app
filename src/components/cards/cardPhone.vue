@@ -65,8 +65,13 @@ export default {
   },
   data: () => ({
     show: false,
-    images: []
-  }),
+    images: [
+      require("@/assets/1.jpg"),
+      require("@/assets/2.jpg"),    
+      require("@/assets/3.jpg"),
+      require("@/assets/4.jpg"),    
+      require("@/assets/5.jpg"),
+    ]  }),
   computed: {
     saved() {
       if (
@@ -109,13 +114,6 @@ export default {
       await this.$store.dispatch("updateSavedHouses", house);
     }
   },
-  async mounted() {
-    await this.images.push(this.house.image1);
-    await this.images.push(this.house.image2);
-    await this.images.push(this.house.image3);
-    await this.images.push(this.house.image4);
-    await this.images.push(this.house.image5);
-  }
 };
 </script>
 

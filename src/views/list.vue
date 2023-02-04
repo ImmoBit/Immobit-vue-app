@@ -7,7 +7,7 @@
     </v-row>
     <v-divider></v-divider>
     <v-card-title>
-      +{{ houses.length - 1 }} annonces trouvées in {{ this.address }}
+      {{ houses.length }} annonce(s) trouvées in {{ this.houses[0].city }}
     </v-card-title>
     <v-row no-gutters>
       <v-col v-if="!$vuetify.breakpoint.xs" cols="7" align="start">
