@@ -337,7 +337,7 @@ export default {
           return;
         } finally {
           images.push(
-            `https://s3uploader-s3uploadbucket-142b9e1q9m793.s3.eu-west-1.amazonaws.com/${randomID}.jpg`
+            `https://s3-upload-delete-s3uploadbucket-1fk7fpu10vu49.s3.eu-west-1.amazonaws.com/${randomID}.jpg`
           );
         }
       }

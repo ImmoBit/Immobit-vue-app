@@ -164,7 +164,7 @@ export default {
     "saved-houses": savedHouses
   },
   data: () => ({
-    logo: require("@/assets/logo.jpg"),
+    logo: require("@/assets/Immobit-logo.png"),
     dialog1: false,
     dialog2: false,
     dialog3: false,

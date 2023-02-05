@@ -10,7 +10,7 @@
         <v-row no-gutters>
           <v-col v-for="(card, i) in cards" :key="i" :cols="card.flex">
             <v-img
-              :src="images[i]"
+              :src="house.images[i]"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="280px"
             >
@@ -95,13 +95,6 @@ import apiRequests from "../apiRequests/searchRequests";
 export default {
   data: () => ({
     house: {},
-    images: [
-      require("@/assets/1.jpg"),
-      require("@/assets/2.jpg"),    
-      require("@/assets/3.jpg"),
-      require("@/assets/4.jpg"),    
-      require("@/assets/5.jpg"),
-    ],
     cards: [
       {
         flex: 8
