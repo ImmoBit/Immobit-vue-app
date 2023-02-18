@@ -1,5 +1,6 @@
 import axios from "axios";
-axios.defaults.baseURL = "http://3.249.239.202:8080/api/auth";
+axios.defaults.baseURL = `${process.env.VUE_APP_API_URL}/api/auth`;
+
 export default {
   signIn(authData) {
     return axios

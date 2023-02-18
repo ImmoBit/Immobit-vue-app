@@ -1,5 +1,5 @@
 import axios from "axios";
-axios.defaults.baseURL = "http://3.249.239.202:8080/api";
+axios.defaults.baseURL = `${process.env.VUE_APP_API_URL}/api`;
 export default {
   getHousesReq(searchStr) {
     return axios.get("/houses-list/?" + searchStr).then(res => {

@@ -15,11 +15,10 @@
               </v-carousel>
             </v-col>
             <v-col class="pb-0">
-              <v-container>
+              <v-container fill-height>
                 <v-row @click="goHousePage">
                   <v-col>
                     <div class="d-flex green--text text--darken-4">
-                      <v-icon>mdi-currency-usd </v-icon>
                       <div class="title grey--text">•</div>
                       <div class="title ml-2">{{ price }}</div>
                       <div class="title">DZD/</div>
@@ -30,23 +29,13 @@
                       <v-icon class="pb-1 mr-1 ml-1">mdi-map-marker</v-icon
                       >{{ address }}
                     </div>
-
                     <div class="text--secondary  ml-10">
                       • {{ house.rooms }} Chambres
                     </div>
                   </v-col>
                 </v-row>
                 <!-- heart icon, price -->
-                <v-row>
-                  <v-col> <v-spacer></v-spacer> </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col>
-                    <v-chip>
-                      Prepayment: 3 mois
-                    </v-chip>
-                  </v-col>
+                <v-row align="end">
                   <v-col align="end">
                     <v-btn color="alert" icon @click="updateSavedHouse">
                       <v-icon>

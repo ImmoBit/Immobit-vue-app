@@ -1,3 +1,5 @@
+const dotenv = require('dotenv')
+dotenv.config()
 let bucket = process.env.VUE_APP_BUCKET;
 let publicPath = "/";
 

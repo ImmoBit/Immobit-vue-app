@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://34.248.32.173:8080/auth/"
+  baseURL: `${process.env.VUE_APP_API_URL}/auth`
 });
 
 export default instance;

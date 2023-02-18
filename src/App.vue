@@ -165,6 +165,7 @@ export default {
   },
   data: () => ({
     logo: require("@/assets/Immobit-logo.png"),
+    parallax: require("@/assets/papapa.png"),
     dialog1: false,
     dialog2: false,
     dialog3: false,
