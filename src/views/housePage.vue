@@ -25,33 +25,16 @@
         <v-chip color="green darken-4" outlined>
           <div class="d-flex">
             <div class="title">{{ price }}</div>
-            <div class="title">DZD/</div>
+            <div class="title ml-1"> دج/</div>
             <div class="mt-2">mois</div>
             <v-icon right>mdi-tag</v-icon>
           </div>
         </v-chip>
         <div class="ml-4 text--secondary">
-          <p class="mt-3">• {{ house.rooms }} Rooms</p>
-
-          <p class="font-weight-normal">
-            <v-icon>mdi-map-marker</v-icon> {{ house.address }}
-          </p>
-
-          <p class="pb-0 mb-0"><v-icon>mdi-overscan</v-icon> 120 m²</p>
-          <!-- Tags-->
-          <div class="pl-4">
-            <v-chip-group active-class="primary--text" column>
-              <v-chip
-                outlined
-                v-for="tag in tags"
-                :key="tag.name"
-                :color="tag.color"
-              >
-                <v-icon left>{{ tag.icon }}</v-icon>
-                {{ tag.name }}
-              </v-chip>
-            </v-chip-group>
+          <div class="font-weight-normal mt-5">
+            <v-icon>mdi-map-marker</v-icon> {{  house.daira }}, {{ house.address }}
           </div>
+          <div class="ml-5 mt-2">• {{ house.rooms }} Chambres{{ house.kitchen ? ', Cuisine ' : ''}}{{ house.bathroom ? ', Salle de bain ' : '' }}</div>
         </div>
       </v-col>
       <v-divider :vertical="!isPhone"></v-divider>
@@ -66,22 +49,14 @@
     <v-row class="mx-0">
       <v-col>
         <v-sheet
-          class="d-flex flex-column align-center mx-auto mt-5 mb-12"
+          class="d-flex flex-column align-center mx-auto mt-5 mb-12 pa-5"
           width="300"
+          height="100"
           elevation="1"
         >
-          <v-avatar class="mb-5" size="128">
-            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-          </v-avatar>
           <div class="d-flex mb-2">
             <v-icon class="mr-2">mdi-phone</v-icon>
-
             <a :href="phone">{{ user.phone }}</a>
-          </div>
-
-          <div class="d-flex mb-2">
-            <v-icon class="mr-2">mdi-facebook-messenger</v-icon>
-            <a href="https://m.me/hichem.talos.7/">Use messenger</a>
           </div>
         </v-sheet>
       </v-col>
@@ -120,16 +95,8 @@ export default {
       phone: null,
       username: null
     },
-    tags: [
-      { name: "meublé", color: "brown lighten-1", icon: "mdi-domain-plus" },
-      { name: "wifi", color: "blue lighten-1", icon: "mdi-wifi" },
-      { name: "4ém etage", color: "blue-grey", icon: "mdi-home-floor-3" }
-    ]
   }),
   computed: {
-    /*dateRangeText() {
-      return this.dates.join(" ~ ");
-    },*/
     isPhone() {
       return this.$vuetify.breakpoint.xs;
     },
@@ -144,17 +111,6 @@ export default {
     addHouse() {
       this.$store.commit("saveHouse", this.id);
     }
-    /*sendDates() {
-      const dates = {
-        user: this.client,
-        house: this.$route.params.id,
-        dates: this.dates
-      };
-      console.log(dates);
-      Axios.post("/dates/", dates).then(res => {
-        console.log(res);
-      });
-    }*/
   },
   metaInfo() {
     return {

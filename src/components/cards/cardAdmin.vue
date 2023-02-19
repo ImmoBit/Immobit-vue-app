@@ -38,64 +38,71 @@
             <v-icon>mdi-pencil</v-icon>Edit
           </v-btn>
         </template>
-        <house-form :houseToEdit="house" :filesToEdit="images"></house-form>
+        <house-form :houseToEdit="house" :filesToEdit="files"></house-form>
       </v-dialog>
-      <v-btn tile text color="red" @click="deleteHouse">Delete</v-btn>
+      <v-dialog class="text-center" v-model="deleteDialog" width="500" height="400">
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" tile text color="red">Supprimer</v-btn>
+        </template>
+        <v-card class="text-center">
+          <v-card-title>  
+            <v-icon class="mx-auto" color="red" style="font-size: 30px;">mdi-delete-alert-outline</v-icon>
+          </v-card-title>
+        <v-card-text> 
+          <h3>Étes vous sur de vouloir supprimer cette annonce?</h3> 
+        </v-card-text>
+        <v-card-actions>
+          <v-row>
+            <v-col>
+              <v-btn
+                text
+                @click="deleteDialog = false">
+                Annuler
+              </v-btn>          
+              <v-btn
+                color="red"
+                text
+                :loading="deleteLoading"
+                @click="deleteHouse">
+                Supprimer
+              </v-btn>
+          </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+      </v-dialog>
     </v-card-actions>
   </v-card>
 </template>
 <script>
 import houseForm from "../../components/houseForm";
 import Axios from "axios";
+import { urlsToFiles } from "../../helpers/helpers"
+
 export default {
   data: () => ({
     namesDates: [],
     pickedDates: [],
     dates: [],
+    deleteLoading: false,
+    deleteDialog: false,
+    files: []
   }),
   props: {
     house: Object
   },
   components: { "house-form": houseForm },
-  created() {
-    /*Axios.get("/dates-house/" + this.house.id).then(res => {
-      console.log(res);
-      for (let index = 0; index < res.data.length; index++) {
-        let datesUser = {
-          user: res.data[index].user,
-          dates: res.data[index].dates
-        };
-        console.log(datesUser);
-        this.pickedDates.push(datesUser);
-        this.dates = this.dates.concat(res.data[index].dates);
-      }
-    });*/
-    for (const image of this.house.images) {
-      if (image) this.setImgSrc(image);
-    }
+  async created() {
+    this.files = await urlsToFiles(this.house.images)
   },
   methods: {
-    async setImgSrc(url) {
-      //const reader = new FileReader();
-
-      const response = await fetch(url);
-      console.log(response);
-      const data = await response.blob();
-      const metadata = {
-        type: "image/jpeg"
-      };
-      /*reader.onload = (event) => {
-        this.imgSrc = (event.target).result;
-      };*/
-      const file = new File([data], "test.jpg", metadata);
-      //reader.readAsDataURL(file);
-      this.images.push(file);
-    },
-    deleteHouse() {
+    async deleteHouse() {
+      this.deleteLoading = true
       const id = this.house.id;
-      Axios.delete("/house-delete/" + id).then(res => {
+      await Axios.delete("/house-delete/" + id).then(res => {
         console.log(res);
-      });
+      });      
+      this.deleteLoading = false
     }
   }
 };

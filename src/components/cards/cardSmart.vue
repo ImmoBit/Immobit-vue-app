@@ -12,25 +12,32 @@
                   :src="image"
                   @click="goHousePage"
                 ></v-carousel-item>
+                <div style="position: absolute; height: 100%;">
+                  <v-container fill-height align-end pa-0>
+                    <v-card-title class="pa-0">
+                      <v-sheet id="price" class="pb-2">
+                        <v-row no-gutters class="white--text">
+                          <div class="title font-weight-bold ml-2">• {{ price }} دج/</div>
+                          <div class="caption">mois</div>
+                        </v-row>
+                      </v-sheet>
+                    </v-card-title>
+                  </v-container>
+                </div>
               </v-carousel>
             </v-col>
             <v-col class="pb-0">
               <v-container fill-height>
                 <v-row @click="goHousePage">
                   <v-col>
-                    <div class="d-flex green--text text--darken-4">
-                      <div class="title grey--text">•</div>
-                      <div class="title ml-2">{{ price }}</div>
-                      <div class="title">DZD/</div>
-                      <div class="caption mt-3">mois</div>
-                    </div>
+                    <div class="text--secondary body-1">{{ type }} à {{  daira }}</div>
                     <v-divider></v-divider>
                     <div class="font-weight-normal ml-3 mt-3">
                       <v-icon class="pb-1 mr-1 ml-1">mdi-map-marker</v-icon
                       >{{ address }}
                     </div>
-                    <div class="text--secondary  ml-10">
-                      • {{ house.rooms }} Chambres
+                    <div class="text--secondary body-2 ml-10">
+                      • {{ house.rooms }} Chambres{{house.kitchen ? ', Cuisine ' : ''}}{{house.bathroom ? ', Salle de bain ' : ''}}
                     </div>
                   </v-col>
                 </v-row>
@@ -75,12 +82,6 @@ export default {
     id() {
       return this.house.id;
     },
-    title() {
-      return (
-        this.house.title.charAt(0).toUpperCase() +
-        this.house.title.substr(1).toLowerCase()
-      );
-    },
     type() {
       return (
         this.house.type.charAt(0).toUpperCase() +
@@ -91,6 +92,12 @@ export default {
       return (
         this.house.city.charAt(0).toUpperCase() +
         this.house.city.substr(1).toLowerCase()
+      );
+    },
+    daira() {
+      return (
+        this.house.daira.charAt(0).toUpperCase() +
+        this.house.daira.substr(1).toLowerCase()
       );
     },
     address() {
@@ -116,3 +123,9 @@ export default {
   }
 };
 </script>
+<style scoped>
+#price {
+  min-width: 400px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(255, 255, 255, 0));
+}
+</style>

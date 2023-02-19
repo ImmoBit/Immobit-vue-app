@@ -7,8 +7,10 @@
         :src="image"
         class="text-right"
       >
-        <v-btn @click="updateSavedHouse" large icon dark>
-          <v-icon>
+      </v-carousel-item>
+      <div style="position: absolute; height: 100%;" class="d-flex flex-column justify-space-between">
+        <v-btn class="align-self-end" @click="updateSavedHouse" large icon dark>
+          <v-icon class="pr-4">
             {{ saved ? "mdi-heart" : "mdi-heart-outline" }}
           </v-icon>
         </v-btn>
@@ -16,19 +18,18 @@
           style="text-decoration: none; color: inherit;"
           :to="{ name: 'House', params: { id: id } }"
         >
-          <v-container fill-height align-end pl-0>
-            <v-card-title class="pl-0">
-              <v-sheet id="price" min-width="350" class="pb-4">
+          <v-container fill-height align-end pa-0>
+            <v-card-title class="pa-0">
+              <v-sheet id="price" class="pb-4">
                 <v-row no-gutters class="white--text">
-                  <v-icon color="white">mdi-currency-usd </v-icon>
-                  <div class="title font-weight-bold">• {{ price }}DZD/</div>
+                  <div class="title font-weight-bold ml-2">• {{ price }} دج/</div>
                   <div class="caption">mois</div>
                 </v-row>
               </v-sheet>
             </v-card-title>
           </v-container>
         </router-link>
-      </v-carousel-item>
+      </div>
     </v-carousel>
 
     <v-card-text class="text--primary pb-0">
@@ -36,7 +37,7 @@
         <v-icon>mdi-map-marker</v-icon>{{ address }}
       </div>
       <div class="body-2 text--secondary  ml-6">
-        • {{ house.rooms }} chambres
+        • {{ house.rooms }} Chambres{{house.kitchen ? ', Cuisine ' : ''}}{{house.bathroom ? ', Salle de bain ' : ''}}
       </div>
     </v-card-text>
 
@@ -113,6 +114,7 @@ export default {
 
 <style>
 #price {
+  min-width: 400px;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(255, 255, 255, 0));
 }
 </style>

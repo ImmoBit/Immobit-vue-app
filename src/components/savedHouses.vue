@@ -5,7 +5,7 @@
       <v-list-item-group active-class="pink--text" multiple>
         <v-list-item v-for="(savedHouse, index) in savedHouses" :key="index">
           <v-list-item-avatar>
-            <v-img :src="images[0]"></v-img>
+            <v-img :src="savedHouse.house[0]"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content @click="goHouse(savedHouse)">
@@ -38,15 +38,6 @@ export default {
   props: {
     savedHouses: Array
   },
-  data: () =>( {
-    images: [
-      require("@/assets/1.jpg"),
-      require("@/assets/2.jpg"),    
-      require("@/assets/3.jpg"),
-      require("@/assets/4.jpg"),    
-      require("@/assets/5.jpg"),
-    ],
-  }),
   methods: {
     goHouse(savedHouse) {
       this.$router.push({ name: "House", params: { id: savedHouse.id } });

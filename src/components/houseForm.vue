@@ -1,5 +1,5 @@
 <template>
-  <validation-observer>
+  <validation-observer v-slot="{ invalid }">
     <form @submit.prevent="submit">
       <v-card elevation="1">
         <v-card-text class="pa-0 ma-0">
@@ -9,7 +9,7 @@
                 <v-container>
                   <v-row no-gutters>
                     <v-col cols="12">
-                      <validation-provider>
+                      <validation-provider rules="required">
                         <v-select
                           :items="types"
                           v-model="house.type"
@@ -23,7 +23,7 @@
 
                   <v-row no-gutters>
                     <v-col>
-                      <validation-provider>
+                      <validation-provider rules="required">
                         <v-select
                           :items="roomsItems"
                           v-model="house.rooms"
@@ -48,7 +48,7 @@
                   </v-row>
                   <v-row no-gutters>
                     <v-col :cols="$vuetify.breakpoint.xs ? 12 : 6">
-                      <validation-provider>
+                      <validation-provider rules="required">
                         <v-select
                           :items="wilNames"
                           v-model="house.city"
@@ -59,7 +59,7 @@
                       </validation-provider>
                     </v-col>
                     <v-col>
-                      <validation-provider name="daira">
+                      <validation-provider name="daira" rules="required">
                         <v-select
                           :items="dairaItems"
                           v-model="house.daira"
@@ -72,7 +72,7 @@
                   </v-row>
                   <v-row no-gutters>
                     <v-col>
-                      <validation-provider v-slot="{ errors }" name="address">
+                      <validation-provider v-slot="{ errors }" rules="required" name="address">
                         <v-text-field
                           v-model="house.address"
                           class="inputs"
@@ -88,17 +88,14 @@
                   <v-row no-gutters>
                     <v-col :cols="$vuetify.breakpoint.xs ? 4 : 3">
                       <validation-provider
-                        v-slot="{ errors }"
                         name="price"
-                        :rules="{
-                          required: true,
-                          regex: /[0-9]+/
-                        }"
+                        v-slot="{ errors }"
+                        :rules="{ required: true, price}"
                       >
                         <v-text-field
                           v-model="house.price"
                           class="inputs"
-                          label="prix"
+                          label="Prix"
                           prepend-icon="mdi-currency-usd"
                           @input="formatPr"
                         />
@@ -134,11 +131,11 @@
                   />
                   <span> {{ errors[0] }}</span>
                 </validation-provider>
-                <validation-provider v-slot="{ errors }" name="files">
+                <validation-provider name="files" :rules="{ required, filesNumber }">
                   <v-file-input
                     v-model="files"
                     @input="setImgsSrc"
-                    @change="files => setImgsSrc(files)"
+                    @change="(files) => setImgsSrc(files)"
                     accept="image/png, image/jpeg, image/bmp"
                     color="deep-purple accent-4"
                     counter
@@ -148,6 +145,7 @@
                     prepend-icon="mdi-camera"
                     outlined
                     :show-size="1000"
+                    :rules="imagesRules"
                   >
                     <template v-slot:selection="{ index, text }">
                       <v-chip
@@ -168,7 +166,6 @@
                       </span>
                     </template>
                   </v-file-input>
-                  <span> {{ errors[0] }}</span>
                 </validation-provider>
                 <v-card
                   :class="$vuetify.breakpoint.xs ? 'ml-12' : ''"
@@ -191,9 +188,8 @@
         </v-card-text>
         <v-card-actions>
           <v-row justify="end">
-            <v-btn class="ma-5" @click="submit" raised color="primary"
-              >Submit</v-btn
-            >
+            <v-btn class="ma-5" @click="submit" :disabled="invalid" :loading="loading" raised color="primary"
+              >Submit</v-btn>
           </v-row>
         </v-card-actions>
       </v-card>
@@ -205,6 +201,8 @@
 import axios from "axios";
 import formatPrice from "../assets/formatPrice";
 import algeriaCities from "../assets/algeria-cities.json";
+import { filesToBase64 } from "../helpers/helpers"
+
 export default {
   props: {
     houseToEdit: {
@@ -227,8 +225,8 @@ export default {
     wilObj: algeriaCities.wilayas,
     wilNames: [],
     dairaItems: [],
-    paytype: "DZD/mois",
-    paytypeItems: ["DZD/jour", "DZD/mois"],
+    paytype: "دج/mois",
+    paytypeItems: ["دج/jour", "دج/mois"],
     files: [],
     imgsSrc: [],
     house: {
@@ -243,7 +241,11 @@ export default {
       price: "",
       description: ""
     },
-    editHouse: false
+    editHouse: false,
+    loading: false,
+    imagesRules: [
+      value => !value || value.length >= 5 && value.length <= 20 || "Le nombre d'images doit être compris entre 5 et 20",
+    ],
   }),
   created() {
     for (let i = 0; i < this.wilObj.length; i++) {
@@ -258,8 +260,9 @@ export default {
       this.piece[0] = this.house.kitchen ? "Cuisine" : null;
       this.piece[1] = this.house.bathroom ? "Salle de bain" : null;
       this.files = this.filesToEdit;
-      this.setImgsSrc();
+      this.setImgsSrc(this.files);
     }
+    this.formatPr()
     this.editHouse = !!this.houseToEdit;
   },
   computed: {
@@ -271,17 +274,10 @@ export default {
     }
   },
   methods: {
-    setImgsSrc(files) {
-      this.imgsSrc = [];
-      console.log(files);
-      if (files) this.files = files;
-      for (const file of this.files) {
-        const reader = new FileReader();
-        reader.onload = event => {
-          this.imgsSrc.push(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
+    async setImgsSrc(files) {
+      if(files)
+        this.files = files
+      this.imgsSrc = await filesToBase64(files);
     },
     reverseCityName() {
       let l = 0;
@@ -305,9 +301,7 @@ export default {
           .split(".")[0];
         const uploadURL0 =
           "https://1973hw9du7.execute-api.eu-west-1.amazonaws.com/uploads";
-        var {
-          data: { uploadURL }
-        } = await axios.get(uploadURL0, {
+        var { data: { uploadURL } } = await axios.get(uploadURL0, {
           params: { imageId, requestType: "delete" }
         });
         try {
@@ -318,6 +312,7 @@ export default {
       }
     },
     async submit() {
+      this.loading = true
       let images = [];
       const uploadURL0 =
         "https://jyuqlb99k5.execute-api.eu-west-1.amazonaws.com/uploads";
@@ -361,6 +356,7 @@ export default {
           .then(res => console.log(res))
           .catch(error => console.log(error));
       }
+      this.loading = false
     }
   },
   watch: {

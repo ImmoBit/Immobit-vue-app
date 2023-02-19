@@ -7,7 +7,7 @@
     </v-row>
     <v-divider></v-divider>
     <v-card-title>
-      {{ houses.length }} annonce(s) trouvées in {{ address }}
+      {{ houses.length }} annonce(s) trouvées {{ address ? `à ${address}`: `` }}
     </v-card-title>
     <v-row no-gutters>
       <v-col v-if="!$vuetify.breakpoint.xs" cols="7" align="start">
@@ -19,7 +19,7 @@
           ref="card"
         ></card>
       </v-col>
-      <v-col v-if="$vuetify.breakpoint.xs">
+      <v-col v-else>
         <card-phone
           v-for="(house, index) in houses"
           :key="index"

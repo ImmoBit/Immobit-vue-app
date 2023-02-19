@@ -128,6 +128,7 @@
             <v-btn
               class="btn"
               :disabled="invalid"
+              :loading="loading"
               raised
               color="#CFD8DC"
               @click="Submit"
@@ -157,10 +158,12 @@ export default {
       username: [""],
       password: [""],
       phone: [""]
-    }
+    },
+    loading: false
   }),
   methods: {
     async Submit() {
+      this.loading = true
       const formData = {
         username: this.username,
         first_name: this.fname,
@@ -173,6 +176,7 @@ export default {
       await this.$store.dispatch("signUp", formData);
       this.error = this.$store.getters.getFormErrors;
       console.log(formData);
+      this.loading = false
     },
     close() {
       this.$emit("dialog-false");

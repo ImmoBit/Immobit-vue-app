@@ -94,7 +94,7 @@
                     :to="{ name: 'admin-panel' }"
                   >
                     <v-list-item-title>
-                      <v-btn small outlined color="primary">Admin</v-btn>
+                      <v-btn text color="primary">Vos annonces</v-btn>
                     </v-list-item-title>
                   </router-link>
                 </v-list-item>
@@ -102,7 +102,7 @@
                 <v-divider class="mx-3"></v-divider>
                 <v-list-item>
                   <v-list-item-title>
-                    <v-btn small text @click="logout">logout</v-btn>
+                    <v-btn text @click="logout">Se déconnecter</v-btn>
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -114,7 +114,12 @@
 
     <v-main class="mb-12">
       <v-container v-if="homePage">
-        <v-row class="mt-12">
+        <v-row>
+          <v-col align="center">          
+            <img :src="immoArab" height="200">
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col class="mx-auto" :cols="$vuetify.breakpoint.xs ? 11 : 7">
             <transition name="slide-fade" mode="out-in">
               <search-bar v-intersect="onIntersect"></search-bar>
@@ -165,6 +170,7 @@ export default {
   },
   data: () => ({
     logo: require("@/assets/Immobit-logo.png"),
+    immoArab: require("@/assets/cart-houses.png"),
     dialog1: false,
     dialog2: false,
     dialog3: false,

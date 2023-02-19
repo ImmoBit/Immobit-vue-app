@@ -102,8 +102,6 @@ export default {
     tags: [],
     roomsItems: [],
     selectedRooms: [],
-    minPr: 0,
-    maxPr: 8,
     selectedRange: null,
     priceRanges: [
       { min: "0", max: "30 000" },
@@ -111,12 +109,7 @@ export default {
       { min: "50 000", max: "100 000" },
       { min: "100 000", max: "200 000" }
     ],
-    disableRooms: false,
-    enableCross: false,
     loading: false,
-    search: "",
-    prep: 0,
-    maxPrep: 6,
   }),
   computed: {
     searchStr() {
@@ -125,6 +118,7 @@ export default {
   },
   methods: {
     filterState() {
+      this.loading = true
       var filtersArr = [];
 
       // Setting rooms filter
@@ -138,18 +132,22 @@ export default {
         filtersArr.push("price_lte=" + this.selectedRange.max.replace(/\s+/g, ''));
       }
       this.$store.dispatch("filterSearch", filtersArr);
+      this.loading = false
     }
   },
   watch: {
-    searchStr() {
-      if (this.searchStr.includes("Appartement")) {
-        this.roomsItems = ["2", "3", "4"];
+    searchStr(val) {
+      console.log(val);
+      if (val.includes("Appartement") || val.includes("Villa") ) {
+        this.roomsItems = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+      } else {
+        this.roomsItems = []
       }
     }
   },
   created() {
-    if (this.searchStr.includes("Appartement")) {
-      this.roomsItems = ["2", "3", "4"];
+    if (this.searchStr.includes("Appartement") || this.searchStr.includes("Villa")) {
+      this.roomsItems = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     }
   }
 };

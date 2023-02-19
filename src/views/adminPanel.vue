@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col>
-          <p class="display-1 text--secondary">Houses created</p>
+          <p class="display-1 text--secondary">Annonces publiée</p>
           <v-sheet style="overflow-x: auto;">
             <v-row>
               <v-col v-for="(house, i) in houses" :key="i">

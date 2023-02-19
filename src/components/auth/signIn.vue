@@ -4,13 +4,14 @@
       <div class="d-flex justify-end">
         <v-btn @click="close" icon><v-icon>mdi-close</v-icon></v-btn>
       </div>
-      <p class="red--text" v-if="error.situation">{{ error.message }}</p>
+      <p class="red--text" v-if="isError">Veuillez corrigez l'email ou le mot de pass.</p>
       <validation-observer v-slot="{ invalid }">
         <form @submit.prevent="submit">
           <validation-provider rules="email" name="Email" v-slot="{ errors }">
             <v-text-field
               v-model="email"
               class="inputs"
+              @focus="errorMessage = null"
               label="Email"
               type="text"
             />
@@ -23,6 +24,7 @@
           >
             <v-text-field
               v-model="password"
+              @focus="errorMessage = null"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
               class="inputs"
               label="Password"
@@ -35,6 +37,7 @@
           <v-btn
             class="btn"
             :disabled="invalid"
+            :loading="loading"
             raised
             color="#CFD8DC"
             @click="Submit"
@@ -55,20 +58,19 @@ export default {
     email: "",
     password: "",
     show1: false,
-    error: {
-      situation: false,
-      message: ""
-    }
+    isError: false,
+    loading: false
   }),
   methods: {
     async Submit() {
+      this.loading = true
       const formData = {
         email: this.email,
         password: this.password
       };
       await this.$store.dispatch("signIn", formData);
-      this.error = this.$store.state.auth.error;
-      console.log(this.error);
+      this.isError = this.$store.state.auth.error.situation;
+      this.loading = false
     },
     close() {
       this.$emit("dialog-false");
