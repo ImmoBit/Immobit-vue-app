@@ -1,4 +1,5 @@
 import apiRequests from "../../apiRequests/searchRequests";
+
 export default {
   search({ commit }, searchArr) {
     var searchStr = "";

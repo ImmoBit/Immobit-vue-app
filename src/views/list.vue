@@ -1,15 +1,9 @@
 <template>
-  <v-container ref="card" :class="$vuetify.breakpoint.xs ? 'pa-0 ma-0' : ''">
-    <v-row no-gutters>
-      <v-col cols="12">
-        <filters-card></filters-card>
-      </v-col>
-    </v-row>
-    <v-divider></v-divider>
+  <v-container ref="card" :class="`mt-16 ${$vuetify.breakpoint.xs ? 'px-0 my-0': ''}`">
     <v-card-title>
       {{ houses.length }} annonce(s) trouvées {{ address ? `à ${address}`: `` }}
     </v-card-title>
-    <v-row no-gutters>
+    <v-row style="min-height: 300px" no-gutters>
       <v-col v-if="!$vuetify.breakpoint.xs" cols="7" align="start">
         <card
           v-for="(house, index) in houses"
@@ -32,13 +26,12 @@
 </template>
 
 <script>
-import filtersCard from "../components/filters";
 import Card from "../components/cards/cardSmart";
 import cardPhone from "../components/cards/cardPhone";
+
 export default {
   components: {
     card: Card,
-    "filters-card": filtersCard,
     "card-phone": cardPhone
   },
   data: () => ({}),
@@ -79,4 +72,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

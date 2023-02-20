@@ -3,14 +3,14 @@
     <!--66636F-->
     <v-app-bar color="#ECEFF1" height="80" app fixed>
       <v-container>
-        <v-row>
+        <v-row align="center">
           <!-- Logo -->
-          <v-col v-if="!$vuetify.breakpoint.xs" class="pr-0" cols="1">
-            <v-img class="mt-5" width="70" height="50" :src="logo"></v-img>
+          <v-col :cols="$vuetify.breakpoint.xs? 3 : 1" @click="goHome">
+            <v-img :src="logo"></v-img>
           </v-col>
 
           <!-- Title -->
-          <v-col @click="goHome" class="pl-0 mt-5" cols="2">
+          <v-col v-if="!$vuetify.breakpoint.xs" @click="goHome" class="pl-0 mt-5" cols="2">
             <span class="display-1 brown--text text--lighten-2">Immo</span>
             <span class="display-1 blue--text text--lighten-2 mx-auto"
               >Bit</span
@@ -113,20 +113,7 @@
     </v-app-bar>
 
     <v-main class="mb-12">
-      <v-container v-if="homePage">
-        <v-row>
-          <v-col align="center">          
-            <img :src="immoArab" height="200">
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col class="mx-auto" :cols="$vuetify.breakpoint.xs ? 11 : 7">
-            <transition name="slide-fade" mode="out-in">
-              <search-bar v-intersect="onIntersect"></search-bar>
-            </transition>
-          </v-col>
-        </v-row>
-      </v-container>
+      <filters-card v-if="isListPage" class="filters-card"></filters-card>
       <transition name="slide-fade" mode="out-in">
         <router-view></router-view>
       </transition>
@@ -159,14 +146,15 @@
 <script>
 import signIn from "./components/auth/signIn";
 import signUp from "./components/auth/signup";
-import searchBar from "./components/searchBar";
 import savedHouses from "./components/savedHouses";
+import filtersCard from "./components/filters";
+
 export default {
   components: {
     "sign-in": signIn,
     "sign-up": signUp,
-    "search-bar": searchBar,
-    "saved-houses": savedHouses
+    "saved-houses": savedHouses,
+    "filters-card": filtersCard,
   },
   data: () => ({
     logo: require("@/assets/Immobit-logo.png"),
@@ -174,9 +162,6 @@ export default {
     dialog1: false,
     dialog2: false,
     dialog3: false,
-    saved: false,
-    value: 1,
-    isIntersecting: false,
     openSavedHouses: true
   }),
   computed: {
@@ -195,6 +180,11 @@ export default {
         return true;
       } else return false;
     },
+     isListPage() {
+      if (this.$route.path === "/list") {
+        return true;
+      } else return false;
+    },
     route() {
       return this.$route.path;
     }
@@ -205,12 +195,6 @@ export default {
     },
     goList() {
       if (this.$route.path != "/list") this.$router.push("/list");
-    },
-    // eslint-disable-next-line no-unused-vars
-    onIntersect(entries, observer) {
-      // More information about these options
-      // is located here: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
-      this.isIntersecting = entries[0].isIntersecting;
     },
     logout() {
       this.$store.dispatch("logout");
@@ -245,5 +229,11 @@ export default {
 
 .v-btn {
   text-transform: none;
+}
+
+.filters-card {
+  position: fixed; 
+  z-index: 1000;
+  width: 100%;
 }
 </style>
