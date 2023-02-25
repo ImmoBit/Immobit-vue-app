@@ -7,9 +7,9 @@
             <v-col class="ma-0 pa-0" cols="5">
               <v-carousel height="250" hide-delimiters>
                 <v-carousel-item
-                  v-for="i in 5"
+                  v-for="(image, i) in images"
                   :key="i"
-                  :src="images[i]"
+                  :src="image"
                 ></v-carousel-item>
                 <div style="position: absolute; height: 100%;">
                   <v-container fill-height align-end pa-0>
@@ -110,8 +110,12 @@ export default {
       return formatPrice(this.house.price);
     }
   },
-  created() {
-    const files = urlsToFiles(this.house.images)
+  async created() {
+    let imagesFiles = []
+    for (let i = 0; i < 5; i++) {
+      imagesFiles = [...imagesFiles, this.house.images[i]];
+    }
+    const files = await urlsToFiles(imagesFiles)
     this.images = filesToBase64(files)
   },
   methods: {

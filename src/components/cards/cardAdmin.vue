@@ -9,6 +9,9 @@
     </v-img>
 
     <v-card-actions>
+      <router-link class="ml-4" :to="{ name: 'House', params: { id: house.id} }">
+        Lien
+      </router-link>
       <v-spacer></v-spacer>
       <v-dialog scrollable>
         <template v-slot:activator="{ on }">

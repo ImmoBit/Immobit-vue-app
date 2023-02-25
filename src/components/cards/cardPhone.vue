@@ -2,9 +2,9 @@
   <v-card elevation="1">  
     <v-carousel  height="350" hide-delimiters> 
       <v-carousel-item
-        v-for=" i in 5"
+        v-for="(image, i) in images"
         :key="i"
-        :src="house.images[i]"
+        :src="image"
       >
       </v-carousel-item>
       <div @click="goHousePage" class="carousel-container d-flex flex-column justify-space-between">
@@ -91,7 +91,11 @@ export default {
     }
   },
   async created() {
-    const files = await urlsToFiles(this.house.images)
+    let imagesFiles = []
+    for (let i = 0; i < 5; i++) {
+      imagesFiles = [...imagesFiles, this.house.images[i]];
+    }
+    const files = await urlsToFiles(imagesFiles)
     this.images = filesToBase64(files)
   },
   methods: {

@@ -10,7 +10,7 @@
                   <v-card-title class="mb-3">Créer une annonce</v-card-title>
                   <v-row>
                     <v-col cols="6">
-                      <v-radio-group class="d-flex flex-row" v-model="house.transaction">
+                      <v-radio-group class="d-flex flex-row" v-model="transaction">
                         <v-radio
                           v-for="(type, i) in ['Location', 'Vente']"
                           :key="i"
@@ -105,8 +105,8 @@
                         name="price"
                         v-slot="{ errors }"
                         :rules="{ required: true, 
-                                rentPrice: house.transaction === 'Location',
-                                sellPrice: house.transaction === 'Vente'}"
+                                rentPrice: transaction === 'Location',
+                                sellPrice: transaction === 'Vente'}"
                       >
                         <v-text-field
                           v-model="house.price"
@@ -119,7 +119,7 @@
                       </validation-provider>
                     </v-col>
                     <v-col :cols="$vuetify.breakpoint.xs ? 4 : 3">
-                      <v-select v-if="house.transaction === 'Vente'"
+                      <v-select v-if="transaction === 'Vente'"
                         :items="sellPaymentItems"
                         v-model="sellPaymentType"
                       ></v-select>
@@ -283,8 +283,9 @@ export default {
       address: "",
       price: "",
       description: "",
-      transaction: "Location",
+      transaction: "rent",
     },
+    transaction: "Location",
     editHouse: false,
     loading: false,
     imagesRules: [
@@ -299,6 +300,7 @@ export default {
     if(this.houseToEdit) {
       this.house = this.houseToEdit;
       this.house.rooms = this.houseToEdit.rooms.toString();
+      this.house.transaction = this.houseToEdit.transaction === 'rent' ? 'Location' : 'Achat';
       this.reverseCityName();
       this.house.kitchen = false;
       this.piece[0] = this.house.kitchen ? "Cuisine" : null;
