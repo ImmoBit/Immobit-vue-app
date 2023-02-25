@@ -4,13 +4,13 @@
       <v-subheader>Enregistré</v-subheader>
       <v-list-item-group active-class="pink--text" multiple>
         <v-list-item v-for="(savedHouse, index) in savedHouses" :key="index">
-          <v-list-item-avatar>
-            <v-img :src="savedHouse.house[0]"></v-img>
+          <v-list-item-avatar @click="goHouse(savedHouse)">
+            <v-img :src="savedHouse.images[0]"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content @click="goHouse(savedHouse)">
             <v-list-item-title>
-              {{ savedHouse.price }}DZD/mois
+              {{ savedHouse.price }}دج/mois
             </v-list-item-title>
             <v-list-item-subtitle>
               <div class="d-flex">
@@ -22,7 +22,7 @@
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn @click="remHouse(savedHouse)" icon>
+            <v-btn @click.prevent="removeHouse(savedHouse)" icon>
               <v-icon color="grey lighten-1">mdi-close</v-icon>
             </v-btn>
           </v-list-item-action>
@@ -39,11 +39,11 @@ export default {
     savedHouses: Array
   },
   methods: {
-    goHouse(savedHouse) {
-      this.$router.push({ name: "House", params: { id: savedHouse.id } });
-      this.$emit("close");
+    async goHouse(savedHouse) {
+      await this.$router.push("/house/" + savedHouse.id);
+      this.$router.go()
     },
-    async remHouse(savedHouse) {
+    async removeHouse(savedHouse) {
       await this.$store.dispatch("updateSavedHouses", savedHouse, false);
     }
   }

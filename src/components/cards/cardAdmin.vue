@@ -10,32 +10,10 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <!--<v-dialog scrollable max-width="600px">
-        <template v-slot:activator="{ on }">
-          <v-btn tile text color="#4E342E" v-on="on">
-            <v-icon>mdi-pencil</v-icon>Edit dates
-          </v-btn>
-        </template>
-        <v-card>
-          <v-row>
-            <v-col cols="12" sm="6">
-              <v-date-picker :allowed-dates="allowedDates" readonly></v-date-picker>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-container>
-                <v-row v-for="(namesDate, index) in namesDates" :key="index">
-                  <v-text-field :value="namesDate.dates" :label="namesDate.user" prepend-icon="mdi-calendar" readonly>
-                  </v-text-field>
-                </v-row>
-              </v-container>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-dialog>-->
       <v-dialog scrollable>
         <template v-slot:activator="{ on }">
           <v-btn tile text color="#4E342E" v-on="on">
-            <v-icon>mdi-pencil</v-icon>Edit
+            <v-icon small class="mr-1">mdi-pencil</v-icon>Modifier
           </v-btn>
         </template>
         <house-form :houseToEdit="house" :filesToEdit="files"></house-form>
@@ -102,6 +80,7 @@ export default {
       await Axios.delete("/house-delete/" + id).then(res => {
         console.log(res);
       });      
+      await this.$store.dispatch("getUserHouses");
       this.deleteLoading = false
     }
   }

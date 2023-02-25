@@ -7,6 +7,19 @@
             <v-row no-gutters>
               <v-col :cols="$vuetify.breakpoint.xs ? 12 : 6">
                 <v-container>
+                  <v-card-title class="mb-3">Créer une annonce</v-card-title>
+                  <v-row>
+                    <v-col cols="6">
+                      <v-radio-group class="d-flex flex-row" v-model="house.transaction">
+                        <v-radio
+                          v-for="(type, i) in ['Location', 'Vente']"
+                          :key="i"
+                          :label="type"
+                          :value="type"
+                        ></v-radio>
+                      </v-radio-group>
+                    </v-col>                  
+                  </v-row>
                   <v-row no-gutters>
                     <v-col cols="12">
                       <validation-provider rules="required">
@@ -23,12 +36,13 @@
 
                   <v-row no-gutters>
                     <v-col>
-                      <validation-provider rules="required">
+                      <validation-provider :rules="{required: house.type !== 'Studio'}">
                         <v-select
                           :items="roomsItems"
                           v-model="house.rooms"
                           label="Chambres"
                           prepend-icon="mdi-bed"
+                          :disabled="house.type === 'Studio'"
                         >
                         </v-select>
                       </validation-provider>
@@ -90,7 +104,9 @@
                       <validation-provider
                         name="price"
                         v-slot="{ errors }"
-                        :rules="{ required: true, price}"
+                        :rules="{ required: true, 
+                                rentPrice: house.transaction === 'Location',
+                                sellPrice: house.transaction === 'Vente'}"
                       >
                         <v-text-field
                           v-model="house.price"
@@ -103,15 +119,19 @@
                       </validation-provider>
                     </v-col>
                     <v-col :cols="$vuetify.breakpoint.xs ? 4 : 3">
-                      <v-select
-                        :items="paytypeItems"
-                        v-model="paytype"
+                      <v-select v-if="house.transaction === 'Vente'"
+                        :items="sellPaymentItems"
+                        v-model="sellPaymentType"
+                      ></v-select>
+                      <v-select v-else
+                        :items="rentPaymentItems"
+                        v-model="rentPaymentType"
                       ></v-select>
                     </v-col>
                   </v-row>
                 </v-container>
               </v-col>
-              <v-col class="pa-2 ml-5">
+              <v-col class="pa-2 ml-5" :style="!$vuetify.breakpoint.xs ? 'margin-top: 200px' :''">
                 <validation-provider
                   class="ml-5"
                   v-slot="{ errors }"
@@ -189,8 +209,28 @@
         <v-card-actions>
           <v-row justify="end">
             <v-btn class="ma-5" @click="submit" :disabled="invalid" :loading="loading" raised color="primary"
-              >Submit</v-btn>
+              >Publier</v-btn>
           </v-row>
+           <v-dialog
+              v-model="loading"
+              hide-overlay
+              persistent
+              width="300"
+            >
+              <v-card
+                color="primary"
+                dark
+              >
+                <v-card-text>
+                  Veuillez patientez
+                  <v-progress-linear
+                    indeterminate
+                    color="white"
+                    class="mb-0"
+                  ></v-progress-linear>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
         </v-card-actions>
       </v-card>
     </form>
@@ -218,15 +258,18 @@ export default {
   },
   data: () => ({
     multiple: true,
-    types: ["Appartement", "Villa"],
+    types: ["Appartement", "Villa", "Studio"],
     roomsItems: ["1", "2", "3", "4", "5", "6", "7", "8"],
     pieceItems: ["Cuisine", "Salle de bain"],
     piece: [],
     wilObj: algeriaCities.wilayas,
     wilNames: [],
     dairaItems: [],
-    paytype: "دج/mois",
-    paytypeItems: ["دج/jour", "دج/mois"],
+    paymentType: "دج/mois",
+    rentPaymentItems: ["دج/jour", "دج/mois"],
+    rentPaymentType: "دج/mois",
+    sellPaymentItems: ["مليار دج", "مليون دج"],
+    sellPaymentType: "مليون دج",
     files: [],
     imgsSrc: [],
     house: {
@@ -239,7 +282,8 @@ export default {
       daira: "",
       address: "",
       price: "",
-      description: ""
+      description: "",
+      transaction: "Location",
     },
     editHouse: false,
     loading: false,
@@ -252,7 +296,7 @@ export default {
       this.wilNames.push(i + 1 + " - " + this.wilObj[i].name);
     }
 
-    if (this.houseToEdit) {
+    if(this.houseToEdit) {
       this.house = this.houseToEdit;
       this.house.rooms = this.houseToEdit.rooms.toString();
       this.reverseCityName();
@@ -343,6 +387,11 @@ export default {
       this.house.price = this.house.price.toString().replace(/\s+/g, "");
       this.house.city = this.house.city.slice(4).trimStart();
       let house = this.house;
+      house.transaction = this.house.transaction === 'Location' ? 'rent' : 'buy';
+      house.paymentFormat = this.house.transaction === 'Location' ? this.rentPaymentType : this.sellPaymentType;
+      if(!house.rooms){
+        house.rooms = 1
+      }
       house.images = images;
 
       if (!this.houseToEdit) {
@@ -356,6 +405,7 @@ export default {
           .then(res => console.log(res))
           .catch(error => console.log(error));
       }
+      await this.$store.dispatch("getUserHouses");
       this.loading = false
     }
   },

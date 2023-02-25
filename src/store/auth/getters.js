@@ -2,7 +2,7 @@ export default {
   getToken(state) {
     return state.token;
   },
-  getUid(state) {
+  getUserId(state) {
     return state.userId;
   },
   getFormErrors(state) {

@@ -9,7 +9,7 @@ export default {
         password: authData.password
       })
       .then(res => {
-        console.log("TokenGet", res);
+        //console.log("TokenGet", res);
         return res;
       })
       .catch(error => {
@@ -25,7 +25,7 @@ export default {
         }
       })
       .then(res => {
-        console.log("getId", res);
+        //console.log("getId", res);
         return res;
       });
   },
@@ -33,7 +33,8 @@ export default {
     return axios
       .post("/users/users/", formData)
       .then(res => {
-        console.log("CreatedUser", res);
+        //console.log("CreatedUser", res);
+        res
       })
       .catch(error => {
         return error;

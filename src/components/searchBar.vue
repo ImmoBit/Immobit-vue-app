@@ -32,10 +32,10 @@
                 dense
                 filled
                 rounded
-                :disabled="!dairas.length"
+                :disabled="!dairasItems.length"
                 multiple
-                :items="dairas"
-                v-model="daira"
+                :items="dairasItems"
+                v-model="dairas"
               ></v-select>
             </v-col>
             <v-col class="mx-auto" :cols="isPhone ? 12 : 6">
@@ -50,7 +50,6 @@
                 dense
                 rounded
                 small-chips
-                multiple
                 :items="types"
                 v-model="type"
               >
@@ -69,7 +68,7 @@
       </v-row>
       <v-row>
         <v-col class="py-0" align="center">
-          <v-radio-group class="mt-0" hide-details v-model="radioGroup">
+          <v-radio-group class="mt-0" hide-details v-model="transaction">
             <v-radio
               v-for="(type, i) in ['Location', 'Achat']"
               :key="i"
@@ -90,8 +89,8 @@
             rounded
             color="primary"
             @click="searchState"
-            :loading="loader"
-            :disabled="loader"
+            :loading="loading"
+            :disabled="loading"
           >
             Recherchez
             <v-icon class="ml-2 pr-0">mdi-magnify</v-icon>
@@ -107,14 +106,14 @@ import algeriaCities from "../assets/algeria-cities.json";
 export default {
   data: () => ({
     types: ["Appartement", "Villa", "Studio"],
-    type: [],
+    type: '',
     wilObj: algeriaCities.wilayas,
     wilNames: [],
     wilaya: "",
+    dairasItems: [],
     dairas: [],
-    daira: [],
-    radioGroup: "Location",
-    loader: false
+    transaction: "Location",
+    loading: false
   }),
   created() {
     for (let i = 0; i < this.wilObj.length; i++) {
@@ -123,16 +122,25 @@ export default {
   },
   methods: {
     async searchState() {
-      this.loader = true;
+      this.loading = true;    
+      this.$store.commit("SET_Fil_SEARCH", '');
       this.$store.commit("loadStart");
       var searchArr = [];
 
       //Setting up search array and address
       this.$store.commit("SET_ADDRESS", this.wilaya.slice(4));
-      searchArr.push("city=" + this.wilaya.slice(4));
-      for (let i = 0; i < this.type.length; i++) {
-        searchArr.push("type=" + this.type[i]);
+      if(this.wilaya)
+        searchArr.push("city=" + this.wilaya.slice(4));
+      if(this.type)
+        searchArr.push("type=" + this.type);
+      for (const daira of this.dairas) {
+        searchArr.push("daira=" + daira)
       }
+      if(this.transaction)  {
+        const transactionEn = this.transaction === 'Location' ? 'rent' : this.transaction === 'Achat' ?  'buy' : ''
+        searchArr.push("transaction=" + transactionEn)
+      }
+      
 
       //Dispatch search action
       await this.$store.dispatch("search", searchArr);
@@ -164,17 +172,17 @@ export default {
     wilaya(val) {
       //  dirha ki ykhayar mdina
       if (val == null) {
-        this.dairas = [];
-        this.daira = "";
+        this.dairasItems = [];
+        this.daira = [];
       } else {
         // eslint-disable-next-line no-unused-vars
         const indexFun = element => element == this.wilaya;
         var indexWil = this.wilNames.findIndex(indexFun);
         console.log(indexWil);
-        var dairas = this.wilObj[indexWil].dairas;
-        this.dairas = [];
-        for (let index = 0; index < dairas.length; index++) {
-          this.dairas.push(dairas[index].name);
+        var dairasItems = this.wilObj[indexWil].dairas;
+        this.dairasItems = [];
+        for (let index = 0; index < dairasItems.length; index++) {
+          this.dairasItems.push(dairasItems[index].name);
         }
       }
     },

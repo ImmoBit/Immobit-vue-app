@@ -22,21 +22,37 @@ import {
 extend("required", {...required,
 message: 'Ce champ est obligatoire'} );
 extend("email", email); 
+extend("name", {...alpha,
+      message: 'Veuillez entrez un nom ou prénom valid'
+    }); 
+
 extend("alpha", alpha);
 extend("alphaNum", alphaNum);
-extend("confirmed", confirmed);
+extend("username", {...alphaNum, 
+      message: 'Le pseudonym doit contenir just les lettres et chiffres'
+    });
+
+extend("confirmed", {...confirmed,
+message: 'Veuillez confirmer votre mot de pass'});
 extend("numeric", numeric);
 extend("alpha_spaces", alpha_spaces);
 extend("regex", regex);
 extend("min", min);
 extend("max", max);
 extend("image", image);
-extend('price', {
+extend('rentPrice', {
   validate(value) {
     return /[0-9]+/.test(value.toString().replace(/\s+/g, "")) 
     && Number(value.toString().replace(/\s+/g, "")) > 10000 && Number(value.toString().replace(/\s+/g, "")) < 500000 ;
   },
-  message: 'Le prix doit etre compris entre 10 000DA et 500 000DA'
+  message: 'entre 10 000 دج et 500 000 دج'
+});
+extend('sellPrice', {
+  validate(value) {
+    return /[0-9]+/.test(value.toString().replace(/\s+/g, "")) 
+    && Number(value.toString().replace(/\s+/g, "")) > 0 && Number(value.toString().replace(/\s+/g, "")) < 999 ;
+  },
+  message: 'entre 0 et 999'
 });
 extend('filesNumber', {
   validate(value) {
@@ -44,6 +60,13 @@ extend('filesNumber', {
   },
   message: ""
 });
+extend('password', {
+  validate(value) {
+    return !!value && value.length >= 8 && !/\s/.test(value);
+  },
+  message: "Le mot de pass doit contenir au moins 8 caractères et non d'espace."
+
+})
 
 
 import "./registerServiceWorker";

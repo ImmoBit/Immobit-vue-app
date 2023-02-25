@@ -4,6 +4,8 @@ import List from "../views/list.vue";
 import adminPanel from "../views/adminPanel.vue";
 import House from "../views/housePage.vue";
 import Home from "../views/home.vue";
+import terms from "../views/terms.vue";
+import privacyPolicy from "../views/privacyPolicy.vue"
 
 Vue.use(VueRouter);
 
@@ -27,6 +29,16 @@ const routes = [
     path: "/admin",
     name: "admin-panel",
     component: adminPanel
+  },
+  {
+    path: "/terms",
+    name: "terms",
+    component: terms
+  },
+  {
+    path: "/privacy-policy",
+    name: "privacy-policy",
+    component: privacyPolicy
   }
 ];
 

@@ -6,9 +6,10 @@ export default {
   async getUserId({ commit }, token) {
     try {
       const res = await authRequests.getUserId(token);
-      await commit("setUserId", res.data.id);
-      await localStorage.setItem("token", token);
-      await localStorage.setItem("userId", res.data.id);
+      console.log(res.data);
+      commit("setUserId", res.data.id);
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", res.data.id);
     } catch (error) {
       console.log(error);
     }
@@ -18,7 +19,7 @@ export default {
     try {
       // Good request
       if (res.status == 200) {
-        await commit("authUser", "token " + res.data.auth_token);
+        commit("authUser", "token " + res.data.auth_token);
         await dispatch("getUserId", "token " + res.data.auth_token);
       }
       // Bad request
@@ -28,7 +29,7 @@ export default {
           situation: true,
           message: res.response.data.non_field_errors[0]
         };
-        await commit("setError", err);
+        commit("setError", err);
       }
     } catch (error) {
       console.log(error);
@@ -36,7 +37,7 @@ export default {
   },
   async getUserHouses({ state, commit }) {
     const res = await searchRequests.getUserHouses(state.userId);
-    await commit("setUserHouses", res.data);
+    commit("setUserHouses", res.data);
   },
   async signUp({ dispatch, commit }, formData) {
     var res = await authRequests.signUp(formData);
@@ -50,7 +51,11 @@ export default {
       console.log(res.response);
       var keys = Object.keys(res.response.data);
       for (let key of keys) {
-        formErrors[key] = res.response.data[key];
+        formErrors[key] = 
+        res.response.data[key][0].includes('A user with that username') ? ['Un utilisateur avec ce pseudo existe déjà.'] 
+        : res.response.data[key][0].includes('user with this email') ? ['Un utilisateur avec cet email existe déjà'] 
+        : res.response.data[key][0].includes('password is too short') ? ['Ce mot de passe est trop court. Il doit contenir au moins 8 caractères.'] 
+        : res.response.data[key]
       }
       console.log(formErrors);
       commit("setFormErrors", formErrors);

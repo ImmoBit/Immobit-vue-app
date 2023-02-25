@@ -4,13 +4,13 @@
       <v-row>
         <v-col>
           <p class="display-1 text--secondary">Annonces publiée</p>
-          <v-sheet style="overflow-x: auto;">
-            <v-row>
-              <v-col v-for="(house, i) in houses" :key="i">
-                <card-admin class="mr-1" :house="house"> </card-admin>
-              </v-col>
-              <v-spacer></v-spacer>
-            </v-row>
+          <v-progress-linear
+            v-if="loading"
+            indeterminate
+            color="cyan"
+          ></v-progress-linear>          
+          <v-sheet class="d-flex user-houses pb-6">
+            <card-admin v-for="(house, i) in houses" :key="i" class="mr-5" :house="house"> </card-admin>
           </v-sheet>
         </v-col>
       </v-row>
@@ -36,8 +36,19 @@ export default {
       return this.$store.getters.getUserHouses;
     }
   },
+  data: () => ({
+    loading: false
+  }),
   async created() {
-    await this.$store.dispatch("getUserHouses");
+    this.loading = true
+    await this.$store.dispatch("getUserHouses");    
+    this.loading = false
+
   }
 };
 </script>
+<style>
+.user-houses {
+  overflow-x: auto;
+}
+</style>

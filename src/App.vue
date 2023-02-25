@@ -17,12 +17,12 @@
             >
           </v-col>
           <!-- save,sign in/up section -->
-          <v-col align="end" cols="9">
+          <v-col align="end" cols="8">
             <v-menu
               eager
               id="menu"
               offset-x
-              :close-on-content-click="openSavedHouses"
+              :close-on-content-click="false"
               :disabled="savedHouses.length == 0"
             >
               <template v-slot:activator="{ on, attrs }">
@@ -40,7 +40,7 @@
                 </v-btn>
               </template>
               <saved-houses
-                @close="openSavedHouses = false"
+                class="saved-houses"
                 :savedHouses="savedHouses"
               ></saved-houses>
             </v-menu>
@@ -56,7 +56,7 @@
                   <v-dialog persistent max-width="350" v-model="dialog1">
                     <template v-slot:activator="{ on, attrs }">
                       <v-list-item-title v-bind="attrs" v-on="on">
-                        Sign up
+                        Créer un compte
                       </v-list-item-title>
                     </template>
                     <sign-up
@@ -70,7 +70,7 @@
                   <v-dialog persistent max-width="350" v-model="dialog2">
                     <template v-slot:activator="{ on, attrs }">
                       <v-list-item-title v-bind="attrs" v-on="on">
-                        Sign in
+                        Se connecter                       
                       </v-list-item-title>
                     </template>
                     <sign-in
@@ -117,29 +117,43 @@
       <transition name="slide-fade" mode="out-in">
         <router-view></router-view>
       </transition>
+      <v-bottom-sheet eager v-model="saved">
+        <saved-houses class="saved-houses" :savedHouses="savedHouses"></saved-houses>
+      </v-bottom-sheet>
+
+      <v-bottom-navigation    
+        hide-on-scroll
+        v-if="$vuetify.breakpoint.xs && !homePage" fixed color="indigo">
+        <v-btn @click="goHome">
+          <span>Recherche</span>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <v-btn @click="saved = !saved">
+          <span>Enregistré</span>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+        <v-btn @click="goList">
+          <span>Navigation</span>
+          <v-icon> mdi-format-list-bulleted </v-icon>
+        </v-btn>
+      </v-bottom-navigation>
     </v-main>
-    <v-bottom-sheet eager v-model="saved">
-      <saved-houses :savedHouses="savedHouses"></saved-houses>
-    </v-bottom-sheet>
+        <v-footer class="footer d-flex flex-column align-center" :style="$vuetify.breakpoint.xs && !homePage ? 'margin-bottom: 60px': ''">
+          <div class="terms-privacy pa-4">
+            <router-link class="pa-4" :to="{ name: 'terms' }">
+              terms
+            </router-link>
+            <router-link class="pa-4" :to="{ name: 'privacy-policy' }">
+              privacy policy
+            </router-link> 
+          </div>
+          <div class="year-company">
+            <div>
+              {{ new Date().getFullYear() }} — ImmoBit
+            </div>
+          </div>
+    </v-footer>
 
-    <v-bottom-navigation v-if="$vuetify.breakpoint.xs" fixed color="indigo">
-      <v-btn @click="goHome">
-        <span>Recherche</span>
-
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn @click="saved = !saved">
-        <span>Enregistré</span>
-
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-btn @click="goList">
-        <span>Navigation</span>
-
-        <v-icon> mdi-format-list-bulleted </v-icon>
-      </v-btn>
-    </v-bottom-navigation>
   </v-app>
 </template>
 
@@ -162,7 +176,8 @@ export default {
     dialog1: false,
     dialog2: false,
     dialog3: false,
-    openSavedHouses: true
+    openSavedHouses: true,
+    saved: false
   }),
   computed: {
     savedHouses() {
@@ -170,13 +185,13 @@ export default {
     },
     authenticated() {
       try {
-        return this.$store.getters.getToken.includes("token");
+        return this.$store.getters.getToken.includes("token") && this.$store.getters.getUserId;
       } catch (e) {
         return false;
       }
     },
     homePage() {
-      if (this.$route.path == "/list" || this.$route.path == "/") {
+      if (this.$route.path == "/" || this.$route.path == "/terms" || this.$route.path == "/privacy-policy") {
         return true;
       } else return false;
     },
@@ -198,11 +213,6 @@ export default {
     },
     logout() {
       this.$store.dispatch("logout");
-    }
-  },
-  watch: {
-    route() {
-      this.saved = false;
     }
   },
   created() {
@@ -233,7 +243,10 @@ export default {
 
 .filters-card {
   position: fixed; 
-  z-index: 1000;
+  z-index: 5;
   width: 100%;
+}
+.saved-houses {
+  z-index: 10;
 }
 </style>

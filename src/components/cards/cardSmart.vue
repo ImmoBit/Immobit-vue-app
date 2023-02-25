@@ -1,36 +1,33 @@
 <template>
   <div>
     <v-hover v-slot="{ hover }">
-      <v-card height="250" shaped :elevation="hover ? 12 : 2">
+      <v-card @click="goHousePage" height="250" shaped :elevation="hover ? 12 : 2">
         <v-container fluid class="pa-0">
           <v-row class="ma-0 pa-0">
             <v-col class="ma-0 pa-0" cols="5">
               <v-carousel height="250" hide-delimiters>
                 <v-carousel-item
-                  v-for="(image, i) in house.images"
+                  v-for="i in 5"
                   :key="i"
-                  :src="image"
-                  @click="goHousePage"
+                  :src="images[i]"
                 ></v-carousel-item>
                 <div style="position: absolute; height: 100%;">
                   <v-container fill-height align-end pa-0>
-                    <v-card-title class="pa-0">
-                      <v-sheet id="price" class="pb-2">
-                        <v-row no-gutters class="white--text">
-                          <div class="title font-weight-bold ml-2">• {{ price }} دج/</div>
-                          <div class="caption">mois</div>
-                        </v-row>
-                      </v-sheet>
-                    </v-card-title>
+                    <v-sheet id="price" class="pb-2">
+                      <v-row no-gutters class="white--text">
+                        <div class="title font-weight-bold ml-2">• {{ price }}</div>
+                        <div class="caption align-self-end ml-1 mb-1">{{ house.paymentFormat }}</div>
+                      </v-row>
+                    </v-sheet>
                   </v-container>
                 </div>
               </v-carousel>
             </v-col>
             <v-col class="pb-0">
               <v-container fill-height>
-                <v-row @click="goHousePage">
+                <v-row>
                   <v-col>
-                    <div class="text--secondary body-1">{{ type }} à {{  daira }}</div>
+                    <div class="text--secondary title">{{ type }} à {{  daira }}</div>
                     <v-divider></v-divider>
                     <div class="font-weight-normal ml-3 mt-3">
                       <v-icon class="pb-1 mr-1 ml-1">mdi-map-marker</v-icon
@@ -44,7 +41,7 @@
                 <!-- heart icon, price -->
                 <v-row align="end">
                   <v-col align="end">
-                    <v-btn color="alert" icon @click="updateSavedHouse">
+                    <v-btn color="alert" icon @click.stop="updateSavedHouse">
                       <v-icon>
                         {{ saved ? "mdi-heart" : "mdi-heart-outline" }}
                       </v-icon>
@@ -62,12 +59,15 @@
 
 <script>
 import formatPrice from "../../assets/formatPrice";
+import { filesToBase64, urlsToFiles } from '../../helpers/helpers';
+
 export default {
   props: {
     house: Object
   },
   data: () => ({
     show: false,
+    images: []
   }),
   computed: {
     saved() {
@@ -110,6 +110,10 @@ export default {
       return formatPrice(this.house.price);
     }
   },
+  created() {
+    const files = urlsToFiles(this.house.images)
+    this.images = filesToBase64(files)
+  },
   methods: {
     async updateSavedHouse() {
       var house = this.house;
@@ -117,8 +121,8 @@ export default {
       await this.$store.dispatch("updateSavedHouses", this.house);
     },
     async goHousePage() {
-      await this.$store.commit("SET_HOUSE", this.house);
-      this.$router.push("/house/" + this.id).catch(() => {});
+      this.$store.commit("SET_HOUSE", this.house);
+      await this.$router.push("/house/" + this.id).catch(() => {});
     }
   }
 };

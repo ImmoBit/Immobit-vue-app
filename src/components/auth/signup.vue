@@ -17,30 +17,26 @@
                 class="mr-5"
                 v-slot="{ errors }"
                 name="First name"
-                rules="required|alpha"
+                rules="required|name"
               >
                 <v-text-field
                   v-model="fname"
                   class="inputs"
                   label="First name"
                   type="text"
-                  @input="fname = fname.replace(/\s+/g, '')"
-                  @blur="fname = fname.replace(/\s+/g, '')"
                 />
                 <span> {{ errors[0] }}</span>
               </validation-provider>
               <validation-provider
                 v-slot="{ errors }"
                 name="Last name"
-                rules="required|alpha"
+                rules="required|name"
               >
                 <v-text-field
                   v-model="lname"
                   class="inputs"
                   label="Last name"
                   type="text"
-                  @input="lname = lname.replace(/\s+/g, '')"
-                  @blur="lname = lname.replace(/\s+/g, '')"
                 />
                 <span> {{ errors[0] }}</span>
               </validation-provider>
@@ -48,16 +44,14 @@
             <validation-provider
               v-slot="{ errors }"
               name="Username"
-              rules="required|alphaNum"
+              rules="required|username"
             >
               <v-text-field
                 v-model="username"
                 class="inputs"
                 id="username"
-                label="Username"
+                label="Pseudonym"
                 type="text"
-                @input="username = username.replace(/\s+/g, '')"
-                @blur="username = username.replace(/\s+/g, '')"
               />
               <span> {{ errors[0] }}</span>
               <span>{{ error.username[0] }}</span>
@@ -78,7 +72,7 @@
               <div class="d-flex">
                 <validation-provider
                   class="mr-5"
-                  rules="alphaNum|confirmed:confirm"
+                  rules="password|confirmed:confirm"
                   name="Password"
                   v-slot="{ errors }"
                 >

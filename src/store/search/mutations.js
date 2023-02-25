@@ -10,5 +10,11 @@ export default {
   },
   SET_HOUSE(state, data) {
     state.house = data;
+  },
+  SET_HOUSESCOUNT(state, data) {
+    state.housesCount = data;
+  },
+  SET_PAGE(state, data) {
+    state.page = data;
   }
 };

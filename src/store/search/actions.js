@@ -2,9 +2,7 @@ import apiRequests from "../../apiRequests/searchRequests";
 
 export default {
   search({ commit }, searchArr) {
-    var searchStr = "";
-    searchStr = searchArr.join("&");
-
+    const searchStr = "&"+ searchArr.join("&");
     commit("SET_SEARCH", searchStr);
   },
   filterSearch({ commit }, filterArr) {
@@ -14,7 +12,8 @@ export default {
   },
   async getHouses({ commit }, searchStr) {
     var data = await apiRequests.getHousesReq(searchStr);
-    commit("SET_HOUSES", data);
+    commit("SET_HOUSES", data.results);
+    commit("SET_HOUSESCOUNT", data.count);
   },
   async getHouse({ commit }, id) {
     var data = await apiRequests.getHouse(id);

@@ -1,37 +1,24 @@
 <template>
-  <v-card elevation="1">
-    <v-carousel height="350" hide-delimiters>
+  <v-card elevation="1">  
+    <v-carousel  height="350" hide-delimiters> 
       <v-carousel-item
-        v-for="(image, i) in house.images"
+        v-for=" i in 5"
         :key="i"
-        :src="image"
-        class="text-right"
+        :src="house.images[i]"
       >
       </v-carousel-item>
-      <div style="position: absolute; height: 100%;" class="d-flex flex-column justify-space-between">
-        <v-btn class="align-self-end" @click="updateSavedHouse" large icon dark>
-          <v-icon class="pr-4">
+      <div @click="goHousePage" class="carousel-container d-flex flex-column justify-space-between">
+        <v-btn class="align-self-end" @click.stop="updateSavedHouse" large icon dark>
+          <v-icon class="pa-4">
             {{ saved ? "mdi-heart" : "mdi-heart-outline" }}
           </v-icon>
         </v-btn>
-        <router-link
-          style="text-decoration: none; color: inherit;"
-          :to="{ name: 'House', params: { id: id } }"
-        >
-          <v-container fill-height align-end pa-0>
-            <v-card-title class="pa-0">
-              <v-sheet id="price" class="pb-4">
-                <v-row no-gutters class="white--text">
-                  <div class="title font-weight-bold ml-2">• {{ price }} دج/</div>
-                  <div class="caption">mois</div>
-                </v-row>
-              </v-sheet>
-            </v-card-title>
-          </v-container>
-        </router-link>
+        <div class="price white--text d-flex pa-2">
+          <div class="title font-weight-bold ml-2">• {{ price }}</div>
+          <div class="caption align-self-end ml-1 mb-1">{{ house.paymentFormat }}</div>
+        </div>
       </div>
     </v-carousel>
-
     <v-card-text class="text--primary pb-0">
       <div class="body-1 font-weight-medium">
         <v-icon>mdi-map-marker</v-icon>{{ address }}
@@ -60,19 +47,21 @@
 
 <script>
 import formatPrice from "../../assets/formatPrice";
+import { filesToBase64, urlsToFiles } from '../../helpers/helpers';
 export default {
   props: {
     house: Object
   },
   data: () => ({
-    show: false
+    show: false,
+    images: []
   }),
   computed: {
     saved() {
       if (
-        this.$store.getters.GET_SAVED_HOUSES.filter(
-          item => item.id == this.house.id
-        ).length > 0
+        this.$store.getters.GET_SAVED_HOUSES.find(
+          item => item.id === this.house.id
+        )
       )
         return true;
       else return false;
@@ -101,20 +90,33 @@ export default {
       else return "";
     }
   },
+  async created() {
+    const files = await urlsToFiles(this.house.images)
+    this.images = filesToBase64(files)
+  },
   methods: {
     async updateSavedHouse() {
       var house = this.house;
       house.saved = this.saved;
       console.log(house);
       await this.$store.dispatch("updateSavedHouses", house);
+    },
+    async goHousePage() {
+      this.$store.commit("SET_HOUSE", this.house);
+      await this.$router.push("/house/" + this.id).catch(() => {});
     }
   },
 };
 </script>
 
 <style>
-#price {
-  min-width: 400px;
+.carousel-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.price {
+  width: 100%;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(255, 255, 255, 0));
 }
 </style>
