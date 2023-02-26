@@ -35,10 +35,9 @@
       <v-col :cols="isPhone ? 12 : 5">
         <div class="d-flex align-center justify-space-between"> 
            <v-chip outlined>
-            <div class="d-flex">
+            <div class="d-flex align-center">
               <div class="title">{{ price }}</div>
-              <div class="title ml-1"> دج/</div>
-              <div class="mt-2">mois</div>
+              <div class="ml-1">{{house.paymentFormat}}</div>
               <v-icon right>mdi-tag</v-icon>
             </div>
           </v-chip>

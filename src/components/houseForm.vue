@@ -189,7 +189,7 @@
                   </v-file-input>
                 </validation-provider>
                 <v-card
-                  :class="$vuetify.breakpoint.xs ? 'ml-12' : ''"
+                  :class="!$vuetify.breakpoint.xs ? 'ml-12' : ''"
                   v-if="!!imgsSrc.length"
                   max-width="280"
                 >
@@ -213,6 +213,10 @@
             >
               Votre annonce a été <strong>publiée</strong>
             </v-alert>
+            <v-alert v-else-if="error"
+              type="error"
+            >
+            Votre annonce n'a pas été publiée. Veuillez réessayez.</v-alert>
             <v-btn class="ma-5" @click="submit" :disabled="invalid" :loading="loading" raised color="primary"
             >Publier</v-btn>
            <v-dialog
@@ -318,7 +322,7 @@ export default {
   },
   computed: {
     userId() {
-      return this.$store.getters.getUid;
+      return this.$store.getters.getUserId;
     },
     wilaya() {
       return this.house.city.slice(4).trimStart() || null
@@ -392,10 +396,12 @@ export default {
       this.house.bathroom = this.piece.includes("Salle de bain");
       this.house.user = this.userId;
       this.house.price = this.house.price.toString().replace(/\s+/g, "");
-      this.house.city = this.house.city.slice(4).trimStart();
-      let house = this.house;
+      let house = {
+        ...this.house
+      }
       house.transaction = this.house.transaction === 'Location' ? 'rent' : 'buy';
       house.paymentFormat = this.house.transaction === 'Location' ? this.rentPaymentType : this.sellPaymentType;
+      house.city = house.city.slice(4).trimStart();
       if(!house.rooms){
         house.rooms = 1
       }
@@ -405,12 +411,18 @@ export default {
         await axios
           .post("/house-create/", house)
           .then(res => console.log(res))
-          .catch(error => console.log(error));
+          .catch(() => {
+              this.error = true
+              setTimeout(() => {this.error = false}, 10000); 
+          });
       } else {
         await axios
           .patch("/house-update/" + this.house.id + "/", house)
           .then(res => console.log(res))
-          .catch(error => console.log(error));
+          .catch(() => {
+              this.error = true
+              setTimeout(() => {this.error = false}, 10000);
+          });
       }
       await this.$store.dispatch("getUserHouses");
       this.loading = false
