@@ -39,16 +39,15 @@
             :disabled="invalid"
             :loading="loading"
             raised
-            color="#CFD8DC"
+            color="primary"
             @click="Submit"
             >Submit</v-btn
           >
         </form>
       </validation-observer>
     </v-card-text>
-    <v-facebook-login class="mx-auto" app-id="453110369395561" @login="onLogin">
-      ></v-facebook-login
-    >
+    <!--<v-facebook-login class="mx-auto" app-id="453110369395561" @login="onLogin">
+      ></v-facebook-login>-->
   </v-card>
 </template>
 

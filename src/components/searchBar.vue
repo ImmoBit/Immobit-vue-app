@@ -1,24 +1,27 @@
 <template>
+  <validation-observer v-slot="{ invalid }">
   <v-container>
     <v-sheet style="border-radius: 25px;" elevation="2" color="white">
       <v-row>
         <v-container class="px-7">
           <v-row>
             <v-col :cols="isPhone ? 12 : 6">
-              <v-select
-                prepend-inner-icon="mdi-map-marker"
-                full-width
-                height="50"
-                label="Wilaya"
-                hide-details
-                disable-lookup
-                filled
-                dense
-                rounded
-                :items="wilNames"
-                v-model="wilaya"
-              >
-              </v-select>
+              <validation-provider rules="required">
+                <v-select
+                  prepend-inner-icon="mdi-map-marker"
+                  full-width
+                  height="50"
+                  label="Wilaya"
+                  hide-details
+                  disable-lookup
+                  filled
+                  dense
+                  rounded
+                  :items="wilNames"
+                  v-model="wilaya"
+                >
+                </v-select>
+              </validation-provider> 
             </v-col>
             <v-col :cols="isPhone ? 12 : 6">
               <v-select
@@ -39,29 +42,31 @@
               ></v-select>
             </v-col>
             <v-col class="mx-auto" :cols="isPhone ? 12 : 6">
-              <v-select
-                prepend-inner-icon="mdi-home-modern"
-                full-width
-                height="50"
-                label="Type"
-                hide-details
-                disable-lookup
-                filled
-                dense
-                rounded
-                small-chips
-                :items="types"
-                v-model="type"
-              >
-                <template v-slot:selection="{ item, index }">
-                  <v-chip x-small v-if="index === 0">
-                    <span>{{ item }}</span>
-                  </v-chip>
-                  <span v-if="index === 1" class="grey--text caption">
-                    (+{{ type.length - 1 }})
-                  </span>
-                </template>
-              </v-select>
+              <validation-provider rules="required">
+                <v-select
+                  prepend-inner-icon="mdi-home-modern"
+                  full-width
+                  height="50"
+                  label="Type"
+                  hide-details
+                  disable-lookup
+                  filled
+                  dense
+                  rounded
+                  small-chips
+                  :items="types"
+                  v-model="type"
+                >
+                  <template v-slot:selection="{ item, index }">
+                    <v-chip x-small v-if="index === 0">
+                      <span>{{ item }}</span>
+                    </v-chip>
+                    <span v-if="index === 1" class="grey--text caption">
+                      (+{{ type.length - 1 }})
+                    </span>
+                  </template>
+                </v-select>
+               </validation-provider>
             </v-col>
           </v-row>
         </v-container>
@@ -90,7 +95,7 @@
             color="primary"
             @click="searchState"
             :loading="loading"
-            :disabled="loading"
+            :disabled="loading || invalid"
           >
             Recherchez
             <v-icon class="ml-2 pr-0">mdi-magnify</v-icon>
@@ -99,6 +104,7 @@
       </v-row>
     </v-sheet>
   </v-container>
+  </validation-observer>
 </template>
 
 <script>

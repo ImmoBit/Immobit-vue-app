@@ -39,32 +39,44 @@ export default {
     const res = await searchRequests.getUserHouses(state.userId);
     commit("setUserHouses", res.data);
   },
-  async signUp({ dispatch, commit }, formData) {
-    var res = await authRequests.signUp(formData);
-    if (res.response.status == 400) {
+  async signUp({ dispatch }, formData) {
+    try {
+      await authRequests.signUp(formData)
+    } catch (error) {
+      console.log("error", error);
+      dispatch('showErrors', error)
+    }
+    dispatch("signIn", {
+      email: formData.email,
+      password: formData.password
+    });
+  },
+  async updateUser({ dispatch, state }, formData) {
+    try {
+      await authRequests.updateUserInfo(state.token, formData)
+    } catch (error) {
+      dispatch('showErrors', error)
+    }
+  },
+  showErrors({ commit }, error){
+    if (error.response.status == 400) {
       var formErrors = {
         email: [""],
         username: [""],
         password: [""],
         phone: [""]
       };
-      console.log(res.response);
-      var keys = Object.keys(res.response.data);
+      var keys = Object.keys(error.response.data);
       for (let key of keys) {
         formErrors[key] = 
-        res.response.data[key][0].includes('A user with that username') ? ['Un utilisateur avec ce pseudo existe déjà.'] 
-        : res.response.data[key][0].includes('user with this email') ? ['Un utilisateur avec cet email existe déjà'] 
-        : res.response.data[key][0].includes('password is too short') ? ['Ce mot de passe est trop court. Il doit contenir au moins 8 caractères.'] 
-        : res.response.data[key]
+        error.response.data[key][0].includes('A user with that username') ? ['Un utilisateur avec ce pseudo existe déjà.'] 
+        : error.response.data[key][0].includes('user with this email') ? ['Un utilisateur avec cet email existe déjà'] 
+        : error.response.data[key][0].includes('password is too short') ? ['Ce mot de passe est trop court. Il doit contenir au moins 8 caractères.'] 
+        : error.response.data[key]
       }
-      console.log(formErrors);
       commit("setFormErrors", formErrors);
     }
 
-    dispatch("signIn", {
-      email: formData.email,
-      password: formData.password
-    });
   },
   async socialLogin({ commit, dispatch, state }, access_token) {
     var res = await socialAuthReqs.socialSignIn(access_token);

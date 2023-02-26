@@ -21,7 +21,9 @@ import {
 } from "vee-validate/dist/rules";
 extend("required", {...required,
 message: 'Ce champ est obligatoire'} );
-extend("email", email); 
+extend("email", {...email,
+          message: 'Veuillez entrez un email valid'
+        }); 
 extend("name", {...alpha,
       message: 'Veuillez entrez un nom ou prénom valid'
     }); 
@@ -35,6 +37,12 @@ extend("username", {...alphaNum,
 extend("confirmed", {...confirmed,
 message: 'Veuillez confirmer votre mot de pass'});
 extend("numeric", numeric);
+extend("phone", {
+  validate(value) {
+    return /[0-9]+/.test(value) && value.length === 10
+  },
+message: 'Veuillez entrez un numéro de téléphone valid'});
+
 extend("alpha_spaces", alpha_spaces);
 extend("regex", regex);
 extend("min", min);

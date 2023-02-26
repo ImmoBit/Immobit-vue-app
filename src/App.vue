@@ -215,9 +215,9 @@ export default {
       this.$store.dispatch("logout");
     }
   },
-  created() {
-    this.$store.dispatch("refreshLogin");
-    this.$store.dispatch("getHousesLocal");
+  async created() {
+    await this.$store.dispatch("refreshLogin");
+    await this.$store.dispatch("getHousesLocal");
   }
 };
 </script>

@@ -13,31 +13,28 @@ export default {
         return res;
       })
       .catch(error => {
-        console.log(error.response);
+        //console.log(error.response);
         return error;
       });
   },
-  getUserId(token) {
-    return axios
-      .get("/users/users/me/", {
+  async getUserId(token) {
+    return await axios.get("/users/users/me/", {
         headers: {
           Authorization: token
         }
       })
-      .then(res => {
-        //console.log("getId", res);
-        return res;
-      });
   },
-  signUp(formData) {
+  updateUserInfo(token, formData) {
     return axios
-      .post("/users/users/", formData)
-      .then(res => {
-        //console.log("CreatedUser", res);
-        res
-      })
-      .catch(error => {
-        return error;
-      });
+      .put("/users/users/me/", formData, {
+        headers: {
+          Authorization: token
+        }
+      } )
+  },
+  
+  
+  async signUp(formData) {
+    await axios.post("/users/users/", formData)
   }
 };

@@ -5,11 +5,11 @@
         <div class="d-flex justify-end">
           <v-btn @click="close" icon><v-icon>mdi-close</v-icon></v-btn>
         </div>
-        <v-facebook-login
+       <!--<v-facebook-login
           class="mx-auto"
           app-id="453110369395561"
           @login="getFbData"
-        ></v-facebook-login>
+        ></v-facebook-login>--> 
         <validation-observer v-slot="{ invalid }">
           <form @submit.prevent="submit">
             <div class="d-flex">
@@ -20,7 +20,7 @@
                 rules="required|name"
               >
                 <v-text-field
-                  v-model="fname"
+                  v-model="user.first_name"
                   class="inputs"
                   label="First name"
                   type="text"
@@ -33,7 +33,7 @@
                 rules="required|name"
               >
                 <v-text-field
-                  v-model="lname"
+                  v-model="user.last_name"
                   class="inputs"
                   label="Last name"
                   type="text"
@@ -47,7 +47,7 @@
               rules="required|username"
             >
               <v-text-field
-                v-model="username"
+                v-model="user.username"
                 class="inputs"
                 id="username"
                 label="Pseudonym"
@@ -56,9 +56,9 @@
               <span> {{ errors[0] }}</span>
               <span>{{ error.username[0] }}</span>
             </validation-provider>
-            <validation-provider rules="email" name="Email" v-slot="{ errors }">
+            <validation-provider rules="required|email" name="Email" v-slot="{ errors }">
               <v-text-field
-                v-model="email"
+                v-model="user.email"
                 class="inputs"
                 label="Email"
                 type="text"
@@ -68,33 +68,29 @@
               <span> {{ errors[0] }}</span>
               <span>{{ error.email[0] }}</span>
             </validation-provider>
-            <validation-observer>
+            <validation-observer v-if="!userInfoToEdit">
               <div class="d-flex">
                 <validation-provider
                   class="mr-5"
-                  rules="password|confirmed:confirm"
+                  rules="required|password|confirmed:confirm"
                   name="Password"
                   v-slot="{ errors }"
                 >
                   <v-text-field
-                    v-model="password"
+                    v-model="user.password"
                     class="inputs"
-                    label="Password"
+                    label="Mot de pass"
                     type="password"
-                    @input="password = password.replace(/\s+/g, '')"
-                    @blur="password = password.replace(/\s+/g, '')"
                   />
                   <span> {{ errors[0] }}</span>
                   <span>{{ error.password[0] }}</span>
                 </validation-provider>
                 <validation-provider vid="confirm" v-slot="{ errors }">
                   <v-text-field
-                    v-model="passwordconf"
+                    v-model="user.re_password"
                     class="inputs"
-                    label="Confirm"
+                    label="Confirmer"
                     type="password"
-                    @input="passwordconf = passwordconf.replace(/\s+/g, '')"
-                    @blur="passwordconf = passwordconf.replace(/\s+/g, '')"
                   />
 
                   <span> {{ errors[0] }}</span>
@@ -103,31 +99,38 @@
             </validation-observer>
 
             <validation-provider
-              rules="numeric"
+              rules="required|phone"
               name="Phone number"
               v-slot="{ errors }"
             >
               <v-text-field
-                v-model="phoneNum"
+                v-model="user.phone"
                 class="inputs"
                 label="Phone N°"
                 type="text"
-                @input="phoneNum = phoneNum.replace(/\s+/g, '')"
-                @blur="phoneNum = phoneNum.replace(/\s+/g, '')"
               />
               <span> {{ errors[0] }}</span>
               <span>{{ error.phone[0] }}</span>
             </validation-provider>
-
-            <v-btn
-              class="btn"
-              :disabled="invalid"
-              :loading="loading"
-              raised
-              color="#CFD8DC"
-              @click="Submit"
-              >Submit</v-btn
-            >
+            <v-row>
+              <v-spacer></v-spacer>
+              <v-btn v-if="userInfoToEdit"
+                class="btn ma-4"
+                :disabled="invalid"
+                :loading="loading"
+                raised
+                color="primary"
+                @click="updateUser"
+                >Modifer</v-btn>
+              <v-btn v-else
+                class="btn ma-4"
+                :disabled="invalid"
+                :loading="loading"
+                raised
+                color="primary"
+                @click="submit"
+              >Soumettre</v-btn>
+            </v-row>
           </form>
         </validation-observer>
       </v-card-text>
@@ -136,15 +139,21 @@
 </template>
 
 <script>
+
 export default {
+  props:{
+   userInfoToEdit: Object
+  },
   data: () => ({
-    fname: "",
-    lname: "",
-    username: "",
-    email: "",
-    password: "",
-    passwordconf: "",
-    phoneNum: "",
+    user: {
+      username: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      re_password: "",
+      phone: ""
+    },
     show1: false,
     show2: false,
     error: {
@@ -155,21 +164,24 @@ export default {
     },
     loading: false
   }),
+  created(){
+    if(this.userInfoToEdit){
+      this.user = this.userInfoToEdit
+    }
+  },
   methods: {
-    async Submit() {
+    async submit() {
       this.loading = true
-      const formData = {
-        username: this.username,
-        first_name: this.fname,
-        last_name: this.lname,
-        email: this.email,
-        password: this.password,
-        re_password: this.passwordconf,
-        phone: this.phoneNum
-      };
-      await this.$store.dispatch("signUp", formData);
+      await this.$store.dispatch("signUp", this.user);
       this.error = this.$store.getters.getFormErrors;
-      console.log(formData);
+      //console.log(formData);
+      this.loading = false
+    },
+    async updateUser() {
+      this.loading = true
+      await this.$store.dispatch('updateUser', this.user)
+      this.error = this.$store.getters.getFormErrors;
+      //console.log(formData);
       this.loading = false
     },
     close() {

@@ -4,10 +4,11 @@
       <v-card elevation="1">
         <v-card-text class="pa-0 ma-0">
           <v-container class="px-0">
+            <v-row align="center"><v-col><v-card-title class="mb-3">Créer une annonce</v-card-title></v-col> 
+            </v-row>
             <v-row no-gutters>
               <v-col :cols="$vuetify.breakpoint.xs ? 12 : 6">
                 <v-container>
-                  <v-card-title class="mb-3">Créer une annonce</v-card-title>
                   <v-row>
                     <v-col cols="6">
                       <v-radio-group class="d-flex flex-row" v-model="transaction">
@@ -131,7 +132,7 @@
                   </v-row>
                 </v-container>
               </v-col>
-              <v-col class="pa-2 ml-5" :style="!$vuetify.breakpoint.xs ? 'margin-top: 200px' :''">
+              <v-col class="pa-2 ml-5" :style="!$vuetify.breakpoint.xs ? 'margin-top: 100px' :''">
                 <validation-provider
                   class="ml-5"
                   v-slot="{ errors }"
@@ -207,10 +208,13 @@
           </v-container>
         </v-card-text>
         <v-card-actions>
-          <v-row justify="end">
+            <v-spacer></v-spacer>
+            <v-alert v-if="success" dense text type="success"
+            >
+              Votre annonce a été <strong>publiée</strong>
+            </v-alert>
             <v-btn class="ma-5" @click="submit" :disabled="invalid" :loading="loading" raised color="primary"
-              >Publier</v-btn>
-          </v-row>
+            >Publier</v-btn>
            <v-dialog
               v-model="loading"
               hide-overlay
@@ -291,6 +295,7 @@ export default {
     imagesRules: [
       value => !value || value.length >= 5 && value.length <= 20 || "Le nombre d'images doit être compris entre 5 et 20",
     ],
+    success: false
   }),
   created() {
     for (let i = 0; i < this.wilObj.length; i++) {
@@ -409,6 +414,8 @@ export default {
       }
       await this.$store.dispatch("getUserHouses");
       this.loading = false
+      this.success = true
+      setTimeout(() => {this.success = false}, 10000); 
     }
   },
   watch: {
