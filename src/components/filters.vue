@@ -65,7 +65,7 @@
                   <v-list-item-action class="ma-0 pa-0">
                     <v-radio-group v-model="selectedRange">
                       <v-radio
-                        :label="priceRange.min + ' - ' + priceRange.max + ' DA'"
+                        :label="priceRange.min + ' - ' + priceRange.max + ` ${paymentFormat}`"
                         :value="priceRange"
                       >
                       </v-radio>
@@ -95,6 +95,7 @@ export default {
       { min: "50 000", max: "100 000" },
       { min: "100 000", max: "200 000" }
     ],
+    paymentFormat: 'دج',
     loading: false,
     timeout: null
   }),
@@ -115,6 +116,18 @@ export default {
         return null
       }   
     }
+  },
+  created() {
+    if(this.searchStr.includes('buy')){
+      this.priceRanges = [
+        { min: "0", max: "200" },
+        { min: "200", max: "400" },
+        { min: "400", max: "600" },
+        { min: "600", max: "999" },
+      ]
+      this.paymentFormat = 'مليون دج'
+    }
+   
   },
   methods: {
     async filterHouses() { 
