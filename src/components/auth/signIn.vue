@@ -41,7 +41,7 @@
             raised
             color="primary"
             @click="Submit"
-            >Submit</v-btn
+            >Soumettre</v-btn
           >
         </form>
       </validation-observer>
