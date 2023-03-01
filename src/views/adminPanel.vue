@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col>
-          <p class="display-1 text--secondary">Annonces publiée</p>
+          <p ref="title" class="display-1 text--secondary">Annonces publiée</p>
           <v-progress-linear
             v-if="loading"
             indeterminate
@@ -42,6 +42,7 @@ import cardAdmin from "../components/cards/cardAdmin";
 import houseForm from "../components/houseForm";
 import signUp from "../components/auth/signup";
 import authRequests from '../apiRequests/authRequests'
+
 export default {
   components: {
     "card-admin": cardAdmin,
@@ -51,6 +52,16 @@ export default {
   computed: {
     houses() {
       return this.$store.getters.getUserHouses;
+    },
+    target() {
+      return this.$refs.title;
+    },
+    options() {
+      return {
+        duration: 300,
+        offset: 0,
+        easing: "easeInOutCubic"
+      };
     }
   },
   data: () => ({
@@ -58,12 +69,14 @@ export default {
     userInfo: null,
     signDialog: false
   }),
-  async created() {
+  async mounted() {
+    this.$vuetify.goTo(this.target, this.options);
     this.loading = true
     await this.$store.dispatch("getUserHouses"); 
     const { data  } = await authRequests.getUserId(this.$store.state.auth.token)
     this.userInfo = data
     this.loading = false
+    
   }
 };
 </script>

@@ -107,14 +107,14 @@
                         v-slot="{ errors }"
                         :rules="{ required: true, 
                                 rentPrice: transaction === 'Location',
-                                sellPrice: transaction === 'Vente'}"
+                                sellPrice: transaction === 'Vente' && sellPaymentType !== 'مليار دج',
+                                sellPriceB: transaction === 'Vente' && sellPaymentType === 'مليار دج' }"
                       >
                         <v-text-field
                           v-model="house.price"
                           class="inputs"
                           label="Prix"
                           prepend-icon="mdi-currency-usd"
-                          @input="formatPr"
                         />
                         <span> {{ errors[0] }}</span>
                       </validation-provider>
@@ -183,7 +183,7 @@
                         v-else-if="index === 2"
                         class="overline grey--text text--darken-3 mx-2"
                       >
-                        +{{ files.length - 2 }} File(s)
+                        +{{ files.length - 2 }} 
                       </span>
                     </template>
                   </v-file-input>
@@ -247,7 +247,6 @@
 
 <script>
 import axios from "axios";
-import formatPrice from "../assets/formatPrice";
 import algeriaCities from "../assets/algeria-cities.json";
 import { filesToBase64 } from "../helpers/helpers"
 
@@ -317,7 +316,6 @@ export default {
       this.files = this.filesToEdit;
       this.setImgsSrc(this.files);
     }
-    this.formatPr()
     this.editHouse = !!this.houseToEdit;
   },
   computed: {
@@ -342,9 +340,6 @@ export default {
         }
       }
       this.house.city = l + 1 + " - " + this.house.city;
-    },
-    formatPr() {
-      this.house.price = formatPrice(this.house.price);
     },
     async reverseSubmit(images) {
       //Delete images
@@ -427,7 +422,12 @@ export default {
       await this.$store.dispatch("getUserHouses");
       this.loading = false
       this.success = true
-      setTimeout(() => {this.success = false}, 10000); 
+      setTimeout(() => {
+        this.success = false
+        if(this.$route.path.includes('create-property')){
+          this.$router.push('/admin')
+        }
+      }, 2000); 
     }
   },
   watch: {

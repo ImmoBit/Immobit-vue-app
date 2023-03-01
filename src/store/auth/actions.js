@@ -71,7 +71,8 @@ export default {
         formErrors[key] = 
         error.response.data[key][0].includes('A user with that username') ? ['Un utilisateur avec ce pseudo existe déjà.'] 
         : error.response.data[key][0].includes('user with this email') ? ['Un utilisateur avec cet email existe déjà'] 
-        : error.response.data[key][0].includes('password is too short') ? ['Ce mot de passe est trop court. Il doit contenir au moins 8 caractères.'] 
+        : error.response.data[key][0].includes('password is too short') ? ['Ce mot de passe est trop court. Il doit contenir au moins 8 caractères.']
+        : error.response.data[key][0].includes('password is too similar') ? ['le mot de passe est similaire au nom'] 
         : error.response.data[key]
       }
       commit("setFormErrors", formErrors);

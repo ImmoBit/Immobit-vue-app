@@ -1,24 +1,33 @@
 <template>
   <v-app id="inspire">
     <!--66636F-->
-    <v-app-bar color="#ECEFF1" height="80" app fixed>
-      <v-container>
-        <v-row align="center">
+    <v-app-bar class="pa-0" color="#ECEFF1" height="80" app fixed>
+      <v-container fluid>
+        <v-row align="center" class="ma-0">
           <!-- Logo -->
           <v-col :cols="$vuetify.breakpoint.xs? 3 : 1" @click="goHome">
             <v-img :src="logo"></v-img>
           </v-col>
 
           <!-- Title -->
-          <v-col v-if="!$vuetify.breakpoint.xs" @click="goHome" class="pl-0 mt-5" cols="2">
+          <v-col cols="2" v-if="!$vuetify.breakpoint.xs" @click="goHome" class="pl-0" >
             <span class="display-1 brown--text text--lighten-2">Immo</span>
             <span class="display-1 blue--text text--lighten-2 mx-auto"
               >Bit</span
             >
+          </v-col>        
+
+           <!--Create a house button-->
+          <v-col v-if="!authenticated && homePage" align="start" align-self="center" cols="2">
+              <v-btn small dark color="orange" :to="{ name: 'CreateProperty' }">
+                Créer une annonce
+              </v-btn>
           </v-col>
+          <v-spacer></v-spacer>
           <!-- save,sign in/up section -->
-          <v-col align="end" cols="8">
+          <v-col class="pa-0" align="end" cols="6">
             <v-menu
+              v-if="!$vuetify.breakpoint.xs"
               eager
               id="menu"
               offset-x

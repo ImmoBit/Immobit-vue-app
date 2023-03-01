@@ -82,7 +82,6 @@ export default {
   },
   mounted() {
     this.$store.commit("loadEnd");
-    console.log(this.$refs.card);
     this.$vuetify.goTo(this.target, this.options);
   }
 };

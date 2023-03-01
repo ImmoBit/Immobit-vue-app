@@ -5,6 +5,7 @@ import adminPanel from "../views/adminPanel.vue";
 import House from "../views/housePage.vue";
 import Home from "../views/home.vue";
 import terms from "../views/terms.vue";
+import CreateProperty from '../views/createProperty.vue'
 import privacyPolicy from "../views/privacyPolicy.vue"
 
 Vue.use(VueRouter);
@@ -14,6 +15,11 @@ const routes = [
     path: "",
     name: "Home",
     component: Home
+  },
+  {
+    path: "/create-property",
+    name: "CreateProperty",
+    component: CreateProperty
   },
   {
     path: "/list",

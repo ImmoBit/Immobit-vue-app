@@ -9,7 +9,7 @@ export default {
     houses: [],
     house: null,
     housesCount: 0,
-    pageSize: 5,
+    pageSize: 10,
     page: 1
   },
   mutations,

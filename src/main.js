@@ -62,6 +62,15 @@ extend('sellPrice', {
   },
   message: 'entre 0 et 999'
 });
+
+extend('sellPriceB', {
+  validate(value) {
+    return  /[0-9]+,{0,3}[0-9]+/.test(value.toString())
+    && Number(value.toString().replace(/\s+/g, "")) > 0 && Number(value.toString().replace(/\s+/g, "")) < 999 ;
+  },
+  message: 'entre 0 et 100'
+});
+
 extend('filesNumber', {
   validate(value) {
     return !!value && value.length >= 5 && value.length <= 20;

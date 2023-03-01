@@ -1,9 +1,10 @@
 <template>
   <div class="signUp">
     <v-card>
+      <v-card-title class="text--secondary">Créer un compte</v-card-title>
       <v-card-text>
         <div class="d-flex justify-end">
-          <v-btn @click="close" icon><v-icon>mdi-close</v-icon></v-btn>
+          <v-btn v-if="isDialog" @click="close" icon><v-icon>mdi-close</v-icon></v-btn>
         </div>
        <!--<v-facebook-login
           class="mx-auto"
@@ -22,7 +23,7 @@
                 <v-text-field
                   v-model="user.first_name"
                   class="inputs"
-                  label="First name"
+                  label="Nom"
                   type="text"
                 />
                 <span> {{ errors[0] }}</span>
@@ -35,7 +36,7 @@
                 <v-text-field
                   v-model="user.last_name"
                   class="inputs"
-                  label="Last name"
+                  label="Prénom"
                   type="text"
                 />
                 <span> {{ errors[0] }}</span>
@@ -106,7 +107,7 @@
               <v-text-field
                 v-model="user.phone"
                 class="inputs"
-                label="Phone N°"
+                label="N° Téléphone"
                 type="text"
               />
               <span> {{ errors[0] }}</span>
@@ -144,6 +145,15 @@ export default {
   props:{
    userInfoToEdit: Object
   },
+  computed:{
+    isDialog(){
+      if(this.$route.path.includes('create-property')){
+        return false
+      } else {
+        return true
+      }
+    }
+  },
   data: () => ({
     user: {
       username: "",
@@ -162,7 +172,7 @@ export default {
       password: [""],
       phone: [""]
     },
-    loading: false
+    loading: false,
   }),
   created(){
     if(this.userInfoToEdit){
