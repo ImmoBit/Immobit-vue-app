@@ -1,33 +1,34 @@
 <template>
   <v-app id="inspire">
     <!--66636F-->
-    <v-app-bar class="pa-0" color="#ECEFF1" height="80" app fixed>
-      <v-container fluid>
+    <v-app-bar class="pa-0" color="#ECEFF1" height="100" app fixed>
+      <v-container>
         <v-row align="center" class="ma-0">
           <!-- Logo -->
-          <v-col :cols="$vuetify.breakpoint.xs? 3 : 1" @click="goHome">
+          <v-col :cols="$vuetify.breakpoint.xs? 4 : 1" @click="goHome">
             <v-img :src="logo"></v-img>
           </v-col>
 
           <!-- Title -->
           <v-col cols="2" v-if="!$vuetify.breakpoint.xs" @click="goHome" class="pl-0" >
-            <span class="display-1 brown--text text--lighten-2">Immo</span>
-            <span class="display-1 blue--text text--lighten-2 mx-auto"
-              >Bit</span
-            >
+            <span style="color: #80c8F1" class="display-1">Immo</span>
+            <span style="color: #F69C65" class="display-1">Bit</span>
           </v-col>        
-
            <!--Create a house button-->
-          <v-col v-if="!authenticated && homePage" align="start" align-self="center" cols="2">
-              <v-btn small dark color="orange" :to="{ name: 'CreateProperty' }">
+          <v-col v-if="!authenticated && homePage" align="center" align-self="center" cols="2">
+            <transition appear name="bounce">
+              <v-btn small dark color="orange" prepend="mdi-home-plus" :to="{ name: 'CreateProperty' }"> 
+                <v-icon> mdi-home-plus </v-icon>
                 Créer une annonce
-              </v-btn>
-          </v-col>
+              </v-btn>            
+            </transition>
+          </v-col>          
           <v-spacer></v-spacer>
+          
           <!-- save,sign in/up section -->
           <v-col class="pa-0" align="end" cols="6">
             <v-menu
-              v-if="!$vuetify.breakpoint.xs"
+              v-if="!$vuetify.breakpoint.xs && savedHouses.length !== 0 "
               eager
               id="menu"
               offset-x
@@ -133,17 +134,17 @@
       <v-bottom-navigation    
         hide-on-scroll
         v-if="$vuetify.breakpoint.xs && !homePage" fixed color="indigo">
-        <v-btn @click="goHome">
+        <v-btn @click="goList">
           <span>Recherche</span>
-          <v-icon>mdi-magnify</v-icon>
+          <v-icon> mdi-format-list-bulleted </v-icon>
         </v-btn>
         <v-btn @click="saved = !saved">
           <span>Enregistré</span>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
-        <v-btn @click="goList">
-          <span>Navigation</span>
-          <v-icon> mdi-format-list-bulleted </v-icon>
+        <v-btn :to="{ name: 'CreateProperty' }">
+          <span class="text-center">Créer <br> une annonce</span>
+          <v-icon> mdi-home-plus </v-icon>
         </v-btn>
       </v-bottom-navigation>
     </v-main>
@@ -248,6 +249,24 @@ export default {
 
 .v-btn {
   text-transform: none;
+}
+
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+.bounce-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .filters-card {

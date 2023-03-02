@@ -22,7 +22,7 @@
                     </v-col>                  
                   </v-row>
                   <v-row no-gutters>
-                    <v-col cols="12">
+                    <v-col>
                       <validation-provider rules="required">
                         <v-select
                           :items="types"
@@ -33,9 +33,6 @@
                         </v-select>
                       </validation-provider>
                     </v-col>
-                  </v-row>
-
-                  <v-row no-gutters>
                     <v-col>
                       <validation-provider :rules="{required: house.type !== 'Studio'}">
                         <v-select
@@ -44,18 +41,6 @@
                           label="Chambres"
                           prepend-icon="mdi-bed"
                           :disabled="house.type === 'Studio'"
-                        >
-                        </v-select>
-                      </validation-provider>
-                    </v-col>
-                    <v-col class="ml-2">
-                      <validation-provider>
-                        <v-select
-                          :items="pieceItems"
-                          v-model="piece"
-                          multiple
-                          small-chips
-                          label="Autres piéces"
                         >
                         </v-select>
                       </validation-provider>
@@ -267,8 +252,6 @@ export default {
     multiple: true,
     types: ["Appartement", "Villa", "Studio"],
     roomsItems: ["1", "2", "3", "4", "5", "6", "7", "8"],
-    pieceItems: ["Cuisine", "Salle de bain"],
-    piece: [],
     wilObj: algeriaCities.wilayas,
     wilNames: [],
     dairaItems: [],
@@ -283,8 +266,6 @@ export default {
       type: "",
       user: null,
       rooms: null,
-      kitchen: null,
-      bathroom: null,
       city: "",
       daira: "",
       address: "",
@@ -298,7 +279,8 @@ export default {
     imagesRules: [
       value => !value || value.length >= 5 && value.length <= 20 || "Le nombre d'images doit être compris entre 5 et 20",
     ],
-    success: false
+    success: false,
+    error: false
   }),
   created() {
     for (let i = 0; i < this.wilObj.length; i++) {
@@ -310,9 +292,6 @@ export default {
       this.house.rooms = this.houseToEdit.rooms.toString();
       this.house.transaction = this.houseToEdit.transaction === 'rent' ? 'Location' : 'Achat';
       this.reverseCityName();
-      this.house.kitchen = false;
-      this.piece[0] = this.house.kitchen ? "Cuisine" : null;
-      this.piece[1] = this.house.bathroom ? "Salle de bain" : null;
       this.files = this.filesToEdit;
       this.setImgsSrc(this.files);
     }
@@ -387,8 +366,6 @@ export default {
         }
       }
       //
-      this.house.kitchen = this.piece.includes("Cuisine");
-      this.house.bathroom = this.piece.includes("Salle de bain");
       this.house.user = this.userId;
       this.house.price = this.house.price.toString().replace(/\s+/g, "");
       let house = {

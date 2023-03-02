@@ -1,7 +1,6 @@
 <template>
   <div class="signUp">
     <v-card>
-      <v-card-title class="text--secondary">Créer un compte</v-card-title>
       <v-card-text>
         <div class="d-flex justify-end">
           <v-btn v-if="isDialog" @click="close" icon><v-icon>mdi-close</v-icon></v-btn>
@@ -13,58 +12,12 @@
         ></v-facebook-login>--> 
         <validation-observer v-slot="{ invalid }">
           <form @submit.prevent="submit">
-            <div class="d-flex">
-              <validation-provider
-                class="mr-5"
-                v-slot="{ errors }"
-                name="First name"
-                rules="required|name"
-              >
-                <v-text-field
-                  v-model="user.first_name"
-                  class="inputs"
-                  label="Nom"
-                  type="text"
-                />
-                <span> {{ errors[0] }}</span>
-              </validation-provider>
-              <validation-provider
-                v-slot="{ errors }"
-                name="Last name"
-                rules="required|name"
-              >
-                <v-text-field
-                  v-model="user.last_name"
-                  class="inputs"
-                  label="Prénom"
-                  type="text"
-                />
-                <span> {{ errors[0] }}</span>
-              </validation-provider>
-            </div>
-            <validation-provider
-              v-slot="{ errors }"
-              name="Username"
-              rules="required|username"
-            >
-              <v-text-field
-                v-model="user.username"
-                class="inputs"
-                id="username"
-                label="Pseudonym"
-                type="text"
-              />
-              <span> {{ errors[0] }}</span>
-              <span>{{ error.username[0] }}</span>
-            </validation-provider>
             <validation-provider rules="required|email" name="Email" v-slot="{ errors }">
               <v-text-field
-                v-model="user.email"
+                v-model.trim="user.email"
                 class="inputs"
                 label="Email"
                 type="text"
-                @input="email = email.replace(/\s+/g, '')"
-                @blur="email = email.replace(/\s+/g, '')"
               />
               <span> {{ errors[0] }}</span>
               <span>{{ error.email[0] }}</span>
@@ -105,7 +58,7 @@
               v-slot="{ errors }"
             >
               <v-text-field
-                v-model="user.phone"
+                v-model.trim="user.phone"
                 class="inputs"
                 label="N° Téléphone"
                 type="text"
@@ -130,7 +83,7 @@
                 raised
                 color="primary"
                 @click="submit"
-              >Soumettre</v-btn>
+              >Créer un compte</v-btn>
             </v-row>
           </form>
         </validation-observer>
@@ -156,9 +109,6 @@ export default {
   },
   data: () => ({
     user: {
-      username: "",
-      first_name: "",
-      last_name: "",
       email: "",
       password: "",
       re_password: "",
@@ -168,7 +118,6 @@ export default {
     show2: false,
     error: {
       email: [""],
-      username: [""],
       password: [""],
       phone: [""]
     },

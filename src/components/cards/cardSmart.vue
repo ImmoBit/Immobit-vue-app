@@ -34,7 +34,7 @@
                       >{{ address }}
                     </div>
                     <div class="text--secondary body-2 ml-10">
-                      • {{ house.rooms }} Chambres{{house.kitchen ? ', Cuisine ' : ''}}{{house.bathroom ? ', Salle de bain ' : ''}}
+                      • {{ house.rooms }} Chambres
                     </div>
                   </v-col>
                 </v-row>

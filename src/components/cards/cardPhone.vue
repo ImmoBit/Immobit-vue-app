@@ -24,7 +24,7 @@
         <v-icon>mdi-map-marker</v-icon>{{ address }}
       </div>
       <div class="body-2 text--secondary  ml-6">
-        • {{ house.rooms }} Chambres{{house.kitchen ? ', Cuisine ' : ''}}{{house.bathroom ? ', Salle de bain ' : ''}}
+        • {{ house.rooms }} Chambres
       </div>
     </v-card-text>
 
