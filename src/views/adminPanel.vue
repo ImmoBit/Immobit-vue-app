@@ -23,7 +23,7 @@
             <sign-up
               v-if="signDialog"
               @dialog-false="signDialog = false"
-              :userInfoToEdit="userInfo"
+              :userInfoToEdit="user"
             ></sign-up>
           </v-dialog>       
           </v-col>
@@ -41,7 +41,6 @@
 import cardAdmin from "../components/cards/cardAdmin";
 import houseForm from "../components/houseForm";
 import signUp from "../components/auth/signup";
-import authRequests from '../apiRequests/authRequests'
 
 export default {
   components: {
@@ -50,6 +49,12 @@ export default {
     "sign-up": signUp
   },
   computed: {
+    userId() {
+      return this.$store.state.auth.userId;
+    },
+    user() {
+      return this.$store.getters.getUser;
+    },
     houses() {
       return this.$store.getters.getUserHouses;
     },
@@ -69,14 +74,25 @@ export default {
     userInfo: null,
     signDialog: false
   }),
+
   async mounted() {
     this.$vuetify.goTo(this.target, this.options);
-    this.loading = true
+    const userId = localStorage.getItem("userId");
+    if(userId !== "null"){
+      this.$store.commit('setUserId', userId)
+      console.log('userId', userId)
+    }
+    else {
+      this.goHome()
+    }
+    this.loading = true      
     await this.$store.dispatch("getUserHouses"); 
-    const { data  } = await authRequests.getUserId(this.$store.state.auth.token)
-    this.userInfo = data
     this.loading = false
-    
+  },
+  methods:{
+    goHome() {
+      if (this.$route.path != "/") this.$router.push("/");
+    },
   }
 };
 </script>

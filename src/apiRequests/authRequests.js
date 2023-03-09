@@ -17,7 +17,7 @@ export default {
         return error;
       });
   },
-  async getUserId(token) {
+  async getUser(token) {
     return await axios.get("/users/users/me/", {
         headers: {
           Authorization: token

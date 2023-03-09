@@ -4,8 +4,8 @@ import actions from "./actions";
 
 export default {
   state: {
-    search: "",
-    filter: "",
+    searchQuery: "",
+    filterQuery:"",
     houses: [],
     house: null,
     housesCount: 0,

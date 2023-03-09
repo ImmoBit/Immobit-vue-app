@@ -2,8 +2,8 @@ export default {
   getToken(state) {
     return state.token;
   },
-  getUserId(state) {
-    return state.userId;
+  getUser(state) {
+    return state.user;
   },
   getFormErrors(state) {
     return state.formErrors;

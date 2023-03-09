@@ -5,7 +5,12 @@ import getters from "./getters";
 export default {
   state: {
     token: "",
-    userId: "",
+    userId: null,
+    user: {
+      id: null,
+      email: "",
+      phone: ""
+    },
     error: {
       situation: false,
       message: ""

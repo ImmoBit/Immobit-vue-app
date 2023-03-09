@@ -1,16 +1,16 @@
 <template>
   <v-app id="inspire">
     <!--66636F-->
-    <v-app-bar class="pa-0" color="#ECEFF1" height="100" app fixed>
-      <v-container>
+    <v-app-bar class="pa-0" color="#ECEFF1" height="80" app fixed>
+      <v-container :fluid="$vuetify.breakpoint.xs" class="pa-0">
         <v-row align="center" class="ma-0">
           <!-- Logo -->
-          <v-col :cols="$vuetify.breakpoint.xs? 4 : 1" @click="goHome">
+          <v-col class="pl-0" :cols="$vuetify.breakpoint.xs? 3 : 1" @click="goHome">
             <v-img :src="logo"></v-img>
           </v-col>
 
           <!-- Title -->
-          <v-col cols="2" v-if="!$vuetify.breakpoint.xs" @click="goHome" class="pl-0" >
+          <v-col cols="2" v-if="!$vuetify.breakpoint.xs" @click="goHome" class="pa-0" >
             <span style="color: #80c8F1" class="display-1">Immo</span>
             <span style="color: #F69C65" class="display-1">Bit</span>
           </v-col>        
@@ -195,7 +195,7 @@ export default {
     },
     authenticated() {
       try {
-        return this.$store.getters.getToken.includes("token") && this.$store.getters.getUserId;
+        return this.$store.getters.getToken.includes("token") && !!this.$store.state.auth.userId;
       } catch (e) {
         return false;
       }

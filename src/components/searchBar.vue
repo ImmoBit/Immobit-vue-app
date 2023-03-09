@@ -129,30 +129,28 @@ export default {
   methods: {
     async searchState() {
       this.loading = true;    
-      this.$store.commit("SET_Fil_SEARCH", '');
       this.$store.commit("loadStart");
-      var searchArr = [];
+      var searchStr = [];
 
       //Setting up search array and address
       this.$store.commit("SET_ADDRESS", this.wilaya.slice(4));
       if(this.wilaya)
-        searchArr.push("city=" + this.wilaya.slice(4));
+        searchStr += "city=" + this.wilaya.slice(4).trim()
       if(this.type)
-        searchArr.push("type=" + this.type);
+        searchStr += "&type=" + this.type;
       for (const daira of this.dairas) {
-        searchArr.push("daira=" + daira)
+        searchStr += "&daira=" + daira
       }
       if(this.transaction)  {
         const transactionEn = this.transaction === 'Location' ? 'rent' : this.transaction === 'Achat' ?  'buy' : ''
-        searchArr.push("transaction=" + transactionEn)
+        searchStr += "&transaction=" + transactionEn
       }
       
 
       //Dispatch search action
-      await this.$store.dispatch("search", searchArr);
+      this.$store.commit("SET_SEARCH", searchStr);
       let url = this.$route.path;
-      var searchComp = this.$store.getters.SEARCH_COMP;
-      await this.$store.dispatch("getHouses", searchComp);
+      await this.$store.dispatch("getHouses", this.searchQueryComp);
 
       //Going to list page
       if (url != "/list") this.$router.push("/list");
@@ -172,6 +170,9 @@ export default {
     },
     isPhone() {
       return this.$vuetify.breakpoint.xs;
+    },
+    searchQueryComp(){
+      return this.$store.getters.SEARCH_QUERY_WITH_PAGE
     }
   },
   watch: {

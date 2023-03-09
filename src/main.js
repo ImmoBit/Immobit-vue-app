@@ -39,7 +39,7 @@ message: 'Veuillez confirmer votre mot de pass'});
 extend("numeric", numeric);
 extend("phone", {
   validate(value) {
-    return /[0-9]+/.test(value) && value.length === 10
+    return (/^\+[0-9]+/.test(value) || /[0-9]+/.test(value)) && value.length <= 15 && value.length >= 6
   },
 message: 'Veuillez entrez un numéro de téléphone valid'});
 
@@ -48,7 +48,14 @@ extend("regex", regex);
 extend("min", min);
 extend("max", max);
 extend("image", image);
-extend('rentPrice', {
+extend('rentPriceDay', {
+  validate(value) {
+    return /[0-9]+/.test(value.toString().replace(/\s+/g, "")) 
+    && Number(value.toString().replace(/\s+/g, "")) > 1000 && Number(value.toString().replace(/\s+/g, "")) < 100000 ;
+  },
+  message: 'entre 10 00 دج et 100 000 دج'
+});
+extend('rentPriceMonth', {
   validate(value) {
     return /[0-9]+/.test(value.toString().replace(/\s+/g, "")) 
     && Number(value.toString().replace(/\s+/g, "")) > 10000 && Number(value.toString().replace(/\s+/g, "")) < 500000 ;

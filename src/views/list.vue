@@ -4,23 +4,23 @@
       {{ houses.length }} annonce(s) trouvées {{ address ? `à ${address}`: `` }}
     </div>
     <v-row style="min-height: 300px" no-gutters>
-        <v-col v-if="!$vuetify.breakpoint.xs" cols="7" align="start"> 
-            <card
-              v-for="(house, index) in houses"
-              :key="index"
-              :house="house"
-              class="mb-6"
-              ref="card"
-            ></card>     
-        </v-col>
-        <v-col v-else>
-          <card-phone
+      <v-col v-if="!$vuetify.breakpoint.xs" cols="7" align="start"> 
+          <card
             v-for="(house, index) in houses"
             :key="index"
             :house="house"
-            style="margin-bottom: 70px"
-          ></card-phone>
-        </v-col>
+            class="mb-6"
+            ref="card"
+          ></card>     
+      </v-col>
+      <v-col v-else>
+        <card-phone
+          v-for="(house, index) in houses"
+          :key="index"
+          :house="house"
+          style="margin-bottom: 70px"
+        ></card-phone>
+      </v-col>
     </v-row>
     <v-pagination
       v-model="page"
@@ -47,7 +47,10 @@ export default {
       return this.$store.getters.PAGE_COUNT;
     },
     searchStr() {
-      return this.$store.getters.SEARCH_COMP;
+      return this.$store.state.search.searchQuery;
+    },
+    searchStrComp() {
+      return this.$store.getters.SEARCH_QUERY_WITH_PAGE;
     },
     houses() {
       return this.$store.getters.GET_HOUSES;
@@ -67,10 +70,12 @@ export default {
     }
   },
   watch: {
-    async searchStr() {
+    async searchStrComp(newVal) {
       this.loading = true
       this.$vuetify.goTo(this.target, this.options);
-      await this.$store.dispatch("getHouses", this.searchStr);
+      await this.$store.dispatch("getHouses", newVal);
+      const route = this.$route.path
+      this.$router.replace({path: `${route}?${newVal}`})
       this.loading = false
     },
     houses() {
@@ -78,6 +83,35 @@ export default {
     },
     page(newVal) {
       this.$store.commit("SET_PAGE", newVal);
+    }
+  },
+  created(){
+    if(this.searchStr === ""){
+      const {p, ...query} = this.$route.query
+      this.$store.commit("SET_PAGE", p);
+      this.$router.replace({query: query})
+      console.log(query);
+      const {city, type, transaction, rooms, price_gte, price_lte} = query
+      if(city){
+        this.$store.commit("SET_ADDRESS", city);
+      }
+      this.$store.commit("SET_PAGE", p);
+      const searchStr = `city=${city}&type=${type}&transaction=${transaction}`
+      let filterStr = ''
+      if(rooms){
+       const roomsQuery = rooms.map(item => `rooms=${item}`).join('&')
+        if(roomsQuery.length){
+          filterStr = `${roomsQuery}`
+        }
+      }
+      if(price_gte && price_lte){
+        filterStr = `&price_gte=${price_gte}&price_lte=${price_lte}`
+      }
+      this.$store.commit("SET_SEARCH", searchStr);
+      this.$store.commit("SET_FILTER_SEARCH", filterStr);
+    } else {
+      const route = this.$route.path
+      this.$router.replace({path: `${route}?${this.searchStrComp}`})
     }
   },
   mounted() {

@@ -46,7 +46,7 @@ export default {
   computed: {
     isAuthenticated(){
       try {
-        return this.$store.getters.getToken.includes("token") && this.$store.getters.getUserId;
+        return this.$store.getters.getToken.includes("token") && this.$store.getters.getUser.id;
       } catch (e) {
         return false;
       }    

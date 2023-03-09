@@ -3,10 +3,11 @@ import socialAuthReqs from "../../apiRequests/socialAuthReqs";
 import searchRequests from "../../apiRequests/searchRequests";
 
 export default {
-  async getUserId({ commit }, token) {
+  async setUserLocal({ commit }, token) {
     try {
-      const res = await authRequests.getUserId(token);
+      const res = await authRequests.getUser(token);
       console.log(res.data);
+      commit("setUser", res.data);
       commit("setUserId", res.data.id);
       localStorage.setItem("token", token);
       localStorage.setItem("userId", res.data.id);
@@ -20,7 +21,7 @@ export default {
       // Good request
       if (res.status == 200) {
         commit("authUser", "token " + res.data.auth_token);
-        await dispatch("getUserId", "token " + res.data.auth_token);
+        await dispatch("setUserLocal", "token " + res.data.auth_token);
       }
       // Bad request
       else if (res.response.status == 400) {
@@ -83,10 +84,13 @@ export default {
     dispatch("getUidAxios", state.token);
     localStorage.setItem("reToken", res.data.refresh_token);
   },
-  refreshLogin({ commit }) {
+  async refreshLogin({ commit }) {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+
     if (token && userId) {
+      const { data  } = await authRequests.getUser(token)
+      commit('setUser', data)
       commit("authUser", token);
       commit("setUserId", userId);
     }

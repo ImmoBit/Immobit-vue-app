@@ -1,9 +1,9 @@
 export default {
   SET_SEARCH(state, data) {
-    state.search = data;
+    state.searchQuery = data;
   },
-  SET_Fil_SEARCH(state, data) {
-    state.filter = data;
+  SET_FILTER_SEARCH(state, data) {
+    state.filterQuery = data;
   },
   SET_HOUSES(state, data) {
     state.houses = data;

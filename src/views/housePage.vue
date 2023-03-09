@@ -50,10 +50,7 @@
           <div class="font-weight-normal mt-5">
             <v-icon>mdi-map-marker</v-icon> {{  house.daira }}, {{ house.address }}
           </div>
-          <div class="ml-5 mt-2">• {{ house.rooms }} Chambres{{ house.kitchen ? ', Cuisine ' : ''}}{{ house.bathroom ? ', Salle de bain ' : '' }}</div>
-        </div>
-        <div v-if="!isPhone" class="ml-4 mt-3">
-          <a :href="phone">{{ user.phone }}</a>
+          <div v-if="house.type != 'Studio'" class="ml-5 mt-2">• {{ house.rooms }} Chambres</div>
         </div>
       </v-col>
       <v-divider :vertical="!isPhone"></v-divider>
@@ -62,6 +59,23 @@
         <v-card elevation="0">
           <v-card-title>Description</v-card-title>
           <v-card-text>{{ house.description  }} </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row align="center" no-gutters>
+      <v-col :cols="isPhone ? 12 : 5">
+        <v-card shaped raised class="d-flex flex-column align-center"> 
+          <p class="title text--secondary class">Contact</p>
+          <div class="d-flex pa-2 align-start">
+            <v-icon class="mr-2">mdi-phone</v-icon>
+            <a style="text-decoration: none" :href="phone">{{ user.phone }}</a>
+          </div>
+          <div class="pa-2">          
+            <v-btn :href="`https://api.whatsapp.com/send?phone=${user.phone}`" rounded color="green" class="white--text" style="text-transform: none">
+              <v-icon class="mr-2" small>mdi-whatsapp</v-icon>
+              Whatsapp
+            </v-btn>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -93,11 +107,8 @@ export default {
     ],
     user: {
       email: null,
-      first_name: null,
       id: null,
-      last_name: null,
       phone: null,
-      username: null
     },
     imagesDialog: false,
     loading: false
@@ -142,10 +153,18 @@ export default {
     this.loading = true
     const id = this.$route.params.id;
     this.house = await apiRequests.getHouse(id);
-    Axios.get("/users/users/" + this.house.user).then(res => {
-      this.user = res.data;
-    });
+    if(this.house.phone){
+        this.user.phone = this.house.phone;
+    } else {
+      Axios.get("/users/users/" + this.house.user).then(res => {
+        this.user.phone = res.data.phone;
+      });
+    }
+   
     this.loading = false
   }
 };
 </script>
+<style scoped>
+
+</style>

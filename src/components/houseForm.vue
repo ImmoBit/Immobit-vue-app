@@ -91,7 +91,8 @@
                         name="price"
                         v-slot="{ errors }"
                         :rules="{ required: true, 
-                                rentPrice: transaction === 'Location',
+                                rentPriceDay: transaction === 'Location' && rentPaymentType === 'دج/jour',
+                                rentPriceMonth: transaction === 'Location' && rentPaymentType === 'دج/mois',
                                 sellPrice: transaction === 'Vente' && sellPaymentType !== 'مليار دج',
                                 sellPriceB: transaction === 'Vente' && sellPaymentType === 'مليار دج' }"
                       >
@@ -115,17 +116,31 @@
                       ></v-select>
                     </v-col>
                   </v-row>
+                  <!--phone area-->
+                  <v-row v-if="isSuperUser">
+                    <v-col :cols="$vuetify.breakpoint.xs ? 12 : 6">
+                      <validation-provider
+                        rules="required|phone"
+                        name="Phone number"
+                        v-slot="{ errors }"
+                      >
+                        <v-text-field
+                          v-model.trim="house.phone"
+                          class="inputs"
+                          label="N° Téléphone"
+                          type="text"
+                          prepend-icon="mdi-phone"
+                        />
+                        <span> {{ errors[0] }}</span>
+                      </validation-provider>
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-col>
               <v-col class="pa-2 ml-5" :style="!$vuetify.breakpoint.xs ? 'margin-top: 100px' :''">
                 <validation-provider
                   class="ml-5"
-                  v-slot="{ errors }"
                   name="Description"
-                  :rules="{
-                    required: true,
-                    regex: /^(?![\s.]+$)[a-zA-Z0-9àÀéèâ',/°\s.]*$/
-                  }"
                 >
                   <v-textarea
                     outlined
@@ -133,9 +148,7 @@
                     class="inputs"
                     label="Description"
                     type="text"
-                    height="50"
                   />
-                  <span> {{ errors[0] }}</span>
                 </validation-provider>
                 <validation-provider name="files" :rules="{ required, filesNumber }">
                   <v-file-input
@@ -255,7 +268,6 @@ export default {
     wilObj: algeriaCities.wilayas,
     wilNames: [],
     dairaItems: [],
-    paymentType: "دج/mois",
     rentPaymentItems: ["دج/jour", "دج/mois"],
     rentPaymentType: "دج/mois",
     sellPaymentItems: ["مليار دج", "مليون دج"],
@@ -272,6 +284,8 @@ export default {
       price: "",
       description: "",
       transaction: "rent",
+      paymentFormat: '',
+      phone: null
     },
     transaction: "Location",
     editHouse: false,
@@ -286,20 +300,35 @@ export default {
     for (let i = 0; i < this.wilObj.length; i++) {
       this.wilNames.push(i + 1 + " - " + this.wilObj[i].name);
     }
+    if(this.isSuperUser){
+      this.house.phone = this.user.phone
+    }
 
     if(this.houseToEdit) {
       this.house = this.houseToEdit;
       this.house.rooms = this.houseToEdit.rooms.toString();
-      this.house.transaction = this.houseToEdit.transaction === 'rent' ? 'Location' : 'Achat';
+      this.house.transaction = this.houseToEdit.transaction;
+      if(this.house.transaction === 'rent'){
+        this.rentPaymentType = this.house.paymentFormat 
+      } else {
+        this.sellPaymentType = this.house.paymentFormat 
+      }
       this.reverseCityName();
       this.files = this.filesToEdit;
       this.setImgsSrc(this.files);
+      this.transaction = this.house.transaction === 'rent' ? 'Location' : 'Vente';
     }
     this.editHouse = !!this.houseToEdit;
   },
   computed: {
+    isSuperUser(){
+      return this.$store.state.auth.userId === '30'
+    },
     userId() {
-      return this.$store.getters.getUserId;
+      return this.$store.state.auth.userId;
+    },
+    user(){
+      return this.$store.getters.getUser
     },
     wilaya() {
       return this.house.city.slice(4).trimStart() || null
@@ -371,8 +400,8 @@ export default {
       let house = {
         ...this.house
       }
-      house.transaction = this.house.transaction === 'Location' ? 'rent' : 'buy';
-      house.paymentFormat = this.house.transaction === 'Location' ? this.rentPaymentType : this.sellPaymentType;
+      house.transaction = this.transaction === 'Location' ? 'rent' : 'buy';
+      house.paymentFormat = this.transaction === 'Location' ? this.rentPaymentType : this.sellPaymentType;
       house.city = house.city.slice(4).trimStart();
       if(!house.rooms){
         house.rooms = 1
