@@ -1,10 +1,9 @@
 <template>
-  <v-card max-width="350">
+  <v-card max-width="320">
     <v-img
       :src="house.images[0]"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-      height="300px"
-      width="350px"
+      max-height="280px"
     >
     </v-img>
 

@@ -64,8 +64,8 @@
     </v-row>
     <v-row align="center" no-gutters>
       <v-col :cols="isPhone ? 12 : 5">
-        <v-card shaped raised class="d-flex flex-column align-center"> 
-          <p class="title text--secondary class">Contact</p>
+        <v-card elevation="0" class="contact-card d-flex flex-column align-center"> 
+          <p class="title text--secondary">Contact</p>
           <div class="d-flex pa-2 align-start">
             <v-icon class="mr-2">mdi-phone</v-icon>
             <a style="text-decoration: none" :href="phone">{{ user.phone }}</a>
@@ -165,6 +165,8 @@ export default {
   }
 };
 </script>
-<style scoped>
-
+<style>
+.contact-card {
+  border-top: 1px solid;
+}
 </style>

@@ -109,7 +109,6 @@ export default {
     chipsRooms: [],
     selectedRange: null,
     chipPrice: null,
-
     priceRanges: [
       { min: "0", max: "30 000" },
       { min: "30 000", max: "50 000" },
@@ -141,7 +140,7 @@ export default {
         }
           return filtersStr
       } catch  {
-        return null
+        return ''
       }   
     }
   },
@@ -158,7 +157,7 @@ export default {
     //TO BE REFACTORED
     const {rooms, price_gte,  price_lte} = this.$route.query
     if(rooms){
-      this.selectedRooms = rooms
+      this.selectedRooms = [...rooms]
       this.chipsRooms = [...this.selectedRooms]
     }
     if(price_gte && price_lte){
@@ -171,11 +170,10 @@ export default {
   },
   methods: {
     async filterHouses() { 
-      this.showChips = true
       this.loading = true
-      if(this.selectedFilters)  {
-        this.$store.commit("SET_FILTER_SEARCH", this.selectedFilters)
-      }
+      this.$store.commit("SET_FILTER_SEARCH", this.selectedFilters)
+      this.chipsRooms = [...this.selectedRooms]
+      this.chipPrice = this.selectedRange
       this.loading = false
     }
   },

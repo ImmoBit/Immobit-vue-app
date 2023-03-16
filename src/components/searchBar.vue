@@ -54,15 +54,16 @@
                   dense
                   rounded
                   small-chips
+                  multiple
                   :items="types"
-                  v-model="type"
+                  v-model="selectedTypes"
                 >
                   <template v-slot:selection="{ item, index }">
                     <v-chip x-small v-if="index === 0">
                       <span>{{ item }}</span>
                     </v-chip>
                     <span v-if="index === 1" class="grey--text caption">
-                      (+{{ type.length - 1 }})
+                      (+{{ selectedTypes.length - 1 }})
                     </span>
                   </template>
                 </v-select>
@@ -112,7 +113,7 @@ import algeriaCities from "../assets/algeria-cities.json";
 export default {
   data: () => ({
     types: ["Appartement", "Villa", "Studio"],
-    type: '',
+    selectedTypes: [],
     wilObj: algeriaCities.wilayas,
     wilNames: [],
     wilaya: "",
@@ -122,9 +123,11 @@ export default {
     loading: false
   }),
   created() {
+    this.selectedTypes = this.types
     for (let i = 0; i < this.wilObj.length; i++) {
       this.wilNames.push(i + 1 + " - " + this.wilObj[i].name);
     }
+    this.wilaya = this.wilNames[16-1]
   },
   methods: {
     async searchState() {
@@ -136,8 +139,11 @@ export default {
       this.$store.commit("SET_ADDRESS", this.wilaya.slice(4));
       if(this.wilaya)
         searchStr += "city=" + this.wilaya.slice(4).trim()
-      if(this.type)
-        searchStr += "&type=" + this.type;
+      if(this.selectedTypes){
+        for (const selectedType of this.selectedTypes) {
+          searchStr += "&type=" + selectedType;
+        }
+      }
       for (const daira of this.dairas) {
         searchStr += "&daira=" + daira
       }

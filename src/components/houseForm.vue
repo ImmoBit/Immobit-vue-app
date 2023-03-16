@@ -76,7 +76,7 @@
                         <v-text-field
                           v-model="house.address"
                           class="inputs"
-                          label="address"
+                          label="Address"
                           type="text"
                           hint="Par exemple: Cité 400 logments, Sidi Djillali"
                           prepend-icon="mdi-map-marker-multiple"
@@ -152,15 +152,16 @@
                 </validation-provider>
                 <validation-provider name="files" :rules="{ required, filesNumber }">
                   <v-file-input
-                    v-model="files"
-                    @input="setImgsSrc"
-                    @change="(files) => setImgsSrc(files)"
-                    accept="image/png, image/jpeg, image/bmp"
+                    ref="fileInput"
+                    :value="files"
+                    @change="(images) => setImgsSrc(images)"
+                    :clearable="false"
+                    accept="image/*"
                     color="deep-purple accent-4"
                     counter
                     label="Images"
                     multiple
-                    placeholder="Select your images"
+                    placeholder="Selectionnez vos images"
                     prepend-icon="mdi-camera"
                     outlined
                     :show-size="1000"
@@ -198,7 +199,15 @@
                       :src="imageSrc"
                       reverse-transition="fade-transition"
                       transition="fade-transition"
-                    ></v-carousel-item>
+                    >
+                    <div class="d-flex justify-end">
+                      <v-btn @click="removeImage(i)" large icon dark>
+                        <v-icon class="pa-4" >
+                          mdi-close
+                        </v-icon>
+                      </v-btn>
+                    </div>
+                    </v-carousel-item>
                   </v-carousel>
                 </v-card>
               </v-col>
@@ -336,9 +345,15 @@ export default {
   },
   methods: {
     async setImgsSrc(files) {
-      if(files)
-        this.files = files
-      this.imgsSrc = await filesToBase64(files);
+      this.$refs.fileInput.isFocused = false
+      console.log(this.$refs.fileInput);
+      this.files =[...this.files, ...files]
+      if(this.files.length)
+        this.imgsSrc = filesToBase64(this.files);
+    },
+    removeImage(key){
+      this.files.splice(key, 1)
+      this.imgsSrc.splice(key, 1)
     },
     reverseCityName() {
       let l = 0;

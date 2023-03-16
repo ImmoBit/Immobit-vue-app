@@ -88,15 +88,21 @@ export default {
   created(){
     if(this.searchStr === ""){
       const {p, ...query} = this.$route.query
-      this.$store.commit("SET_PAGE", p);
       this.$router.replace({query: query})
-      console.log(query);
       const {city, type, transaction, rooms, price_gte, price_lte} = query
+      let searchStr = ''
       if(city){
         this.$store.commit("SET_ADDRESS", city);
+        searchStr += `city=${city}` 
+      }
+      if(transaction) {
+        searchStr += `&transaction=${transaction}`
+      }
+      if(type){
+        const typeQuery = type.map(item => `type=${item}`).join('&')
+        searchStr += `&${typeQuery}`
       }
       this.$store.commit("SET_PAGE", p);
-      const searchStr = `city=${city}&type=${type}&transaction=${transaction}`
       let filterStr = ''
       if(rooms){
        const roomsQuery = rooms.map(item => `rooms=${item}`).join('&')
