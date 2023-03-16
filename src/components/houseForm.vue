@@ -244,6 +244,9 @@
                     class="mb-0"
                   ></v-progress-linear>
                 </v-card-text>
+                <div class="pa-2 text-right caption">
+                  {{isUploaded.length}}/{{files.length}} images passé
+                </div>
               </v-card>
             </v-dialog>
         </v-card-actions>
@@ -302,6 +305,7 @@ export default {
     imagesRules: [
       value => !value || value.length >= 5 && value.length <= 20 || "Le nombre d'images doit être compris entre 5 et 20",
     ],
+    isUploaded: [],
     success: false,
     error: false
   }),
@@ -346,9 +350,12 @@ export default {
   methods: {
     async setImgsSrc(files) {
       this.$refs.fileInput.isFocused = false
-      console.log(this.$refs.fileInput);
-      this.files =[...this.files, ...files]
-      if(this.files.length)
+      this.files = this.files.concat(files)
+      console.log(this.files);
+      this.files.sort(function(a, b) {
+        return a.size - b.size;
+      });
+      if(this.files.length !==0)
         this.imgsSrc = filesToBase64(this.files);
     },
     removeImage(key){
@@ -400,8 +407,10 @@ export default {
               "Content-Type": "image/jpeg"
             }
           });
+          this.isUploaded.push(true)
         } catch (e) {
           this.reverseSubmit(images);
+          this.isUploaded = []
           return;
         } finally {
           images.push(
@@ -430,6 +439,7 @@ export default {
           .catch(() => {
               this.error = true
               setTimeout(() => {this.error = false}, 10000); 
+              this.isUploaded = []
           });
       } else {
         await axios
@@ -438,11 +448,13 @@ export default {
           .catch(() => {
               this.error = true
               setTimeout(() => {this.error = false}, 10000);
+              this.isUploaded = []
           });
       }
       await this.$store.dispatch("getUserHouses");
       this.loading = false
       this.success = true
+      this.isUploaded = []
       setTimeout(() => {
         this.success = false
         if(this.$route.path.includes('create-property')){

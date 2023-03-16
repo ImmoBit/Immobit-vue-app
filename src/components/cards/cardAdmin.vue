@@ -84,6 +84,7 @@ export default {
       });      
       await this.$store.dispatch("getUserHouses");
       this.deleteLoading = false
+      this.deleteDialog = false
     }
   }
 };
