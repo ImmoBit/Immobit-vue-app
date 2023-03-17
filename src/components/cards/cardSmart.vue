@@ -33,7 +33,7 @@
                       <v-icon class="pb-1 mr-1 ml-1">mdi-map-marker</v-icon
                       >{{ address }}
                     </div>
-                    <div class="text--secondary body-2 ml-10">
+                    <div v-if="house.type != 'Studio'" class="text--secondary body-2 ml-10">
                       • {{ house.rooms }} Chambres
                     </div>
                   </v-col>

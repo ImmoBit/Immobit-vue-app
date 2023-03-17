@@ -23,8 +23,8 @@
       <div class="body-1 font-weight-medium">
         <v-icon>mdi-map-marker</v-icon>{{ address }}
       </div>
-      <div class="body-2 text--secondary  ml-6">
-        • {{ house.rooms }} Chambres
+      <div class="body-2 text--secondary ml-6">
+        • {{house.rooms === 1 ? house.type : `${house.rooms} Chambres` }} 
       </div>
     </v-card-text>
 
