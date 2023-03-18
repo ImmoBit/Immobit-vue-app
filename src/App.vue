@@ -134,9 +134,9 @@
       <v-bottom-navigation    
         hide-on-scroll
         v-if="$vuetify.breakpoint.xs && !homePage" fixed color="indigo">
-        <v-btn @click="goList">
+        <v-btn @click="goHome">
           <span>Recherche</span>
-          <v-icon> mdi-format-list-bulleted </v-icon>
+          <v-icon> mdi-magnify </v-icon>
         </v-btn>
         <v-btn @click="saved = !saved">
           <span>Enregistré</span>
