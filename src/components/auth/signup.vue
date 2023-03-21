@@ -15,6 +15,7 @@
             <validation-provider rules="required|email" name="Email" v-slot="{ errors }">
               <v-text-field
                 v-model.trim="user.email"
+                @keyup="event => event.target.value = event.target.value.toLowerCase()"
                 class="inputs"
                 label="Email"
                 type="text"
