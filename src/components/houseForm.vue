@@ -216,8 +216,7 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-alert v-if="success" dense text type="success"
-            >
+            <v-alert v-if="success" dense text type="success">
               Votre annonce a été <strong>publiée</strong>
             </v-alert>
             <v-alert v-else-if="error"
@@ -349,7 +348,9 @@ export default {
   },
   methods: {
     async setImgsSrc(files) {
-      this.$refs.fileInput.isFocused = false
+      try {
+        this.$refs.fileInput.isFocused = false
+      }finally{
       this.files = this.files.concat(files)
       console.log(this.files);
       this.files.sort(function(a, b) {
@@ -357,6 +358,7 @@ export default {
       });
       if(this.files.length !==0)
         this.imgsSrc = filesToBase64(this.files);
+      }
     },
     removeImage(key){
       this.files.splice(key, 1)
