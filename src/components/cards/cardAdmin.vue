@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="320">
+  <v-card class="d-flex flex-column justify-space-between" max-width="320">
     <v-img
       :src="house.images[0]"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
