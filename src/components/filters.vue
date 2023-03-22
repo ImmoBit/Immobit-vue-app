@@ -57,28 +57,28 @@
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
-            <v-list class="ma-0 pa-0">
-              <v-list-item
-                class="my-0 py-0"
-                v-for="(priceRange, i) in priceRanges"
-                :key="i"
-              >
-                <v-list-item-content class="ma-0 pa-0">
-                  <v-list-item-action class="ma-0 pa-0">
-                    <v-radio-group v-model="selectedRange">
-                      <v-radio
-                        :label="priceRange.min + ' - ' + priceRange.max + ` ${paymentFormat}`"
-                        :value="priceRange"
-                      >
-                      </v-radio>
-                    </v-radio-group>
-                  </v-list-item-action>
-                </v-list-item-content>
-              </v-list-item>
+            <v-list class="ma-0 pa-0">                    
+              <v-radio-group v-model="selectedRange">
+                <v-list-item
+                  class="my-0 py-0"
+                  v-for="(priceRange, i) in priceRanges"
+                  :key="i"
+                >
+                  <v-list-item-content class="ma-0 pa-0">
+                    <v-list-item-action class="ma-0 pa-0">
+                        <v-radio
+                          class="radioInput"
+                          :label="priceRange.min + ' - ' + priceRange.max + ` ${paymentFormat}`"
+                          :value="priceRange"
+                        >
+                        </v-radio>
+                    </v-list-item-action>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-radio-group>
             </v-list>
           </v-menu>
         </div>
-        <v-btn text @click="filterHouses" :loading="loading">Filtrer</v-btn>
       </v-row>
       <v-row no-gutters>
         <div class="rooms-chips mr-6">
@@ -104,7 +104,7 @@ import formatPrice from '../assets/formatPrice';
 export default {
   data: () => ({
     tags: [],
-    roomsItems: ['1', '2', '3', '4', '5', '6', '7', '8'],
+    roomsItems: ['1/Studio', '2', '3', '4', '5', '6', '7', '8'],
     selectedRooms: [],
     chipsRooms: [],
     selectedRange: null,
@@ -178,6 +178,14 @@ export default {
     }
   },
   watch:{
+    selectedFilters(){
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+    this.timeout = setTimeout(() => {
+      this.filterHouses();
+    }, 1000); 
+    },
     route() {
       //TO BE REFACTORED
       const {rooms, price_gte, price_lte} = this.$route.query

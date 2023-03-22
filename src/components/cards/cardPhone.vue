@@ -19,7 +19,7 @@
         </div>
       </div>
     </v-carousel>
-    <v-card-text class="text--primary pb-0">
+    <v-card-text @click="goHousePage" class="text--primary pb-0">
       <div class="body-1 font-weight-medium">
         <v-icon>mdi-map-marker</v-icon>{{ address }}
       </div>

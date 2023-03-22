@@ -128,6 +128,16 @@ export default {
       this.$store.commit("SET_HOUSE", this.house);
       await this.$router.push("/house/" + this.id).catch(() => {});
     }
+  },
+  watch: {
+    async id() {
+      let imagesFiles = []
+      for (let i = 0; i < 5; i++) {
+        imagesFiles = [...imagesFiles, this.house.images[i]];
+      }
+      const files = await urlsToFiles(imagesFiles)
+      this.images = filesToBase64(files)
+    }
   }
 };
 </script>
