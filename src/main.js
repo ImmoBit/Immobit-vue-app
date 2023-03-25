@@ -75,7 +75,7 @@ extend('sellPriceB', {
     return  /[0-9]+/.test(value.toString())
     && Number(value.toString().replace(/\s+/g, "")) > 0 && Number(value.toString().replace(/\s+/g, "")) < 50 ;
   },
-  message: 'entre 0 et 100'
+  message: 'entre 0 et 50'
 });
 
 extend('filesNumber', {
