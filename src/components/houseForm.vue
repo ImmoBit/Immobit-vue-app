@@ -81,7 +81,7 @@
                           hint="Par exemple: Cité 400 logments, Sidi Djillali"
                           prepend-icon="mdi-map-marker-multiple"
                         />
-                        <span> {{ errors[0] }}</span>
+                        <span class="red--text"> {{ errors[0] }}</span>
                       </validation-provider>
                     </v-col>
                   </v-row>
@@ -102,7 +102,7 @@
                           label="Prix"
                           prepend-icon="mdi-currency-usd"
                         />
-                        <span> {{ errors[0] }}</span>
+                        <span class="red--text"> {{ errors[0] }}</span>
                       </validation-provider>
                     </v-col>
                     <v-col :cols="$vuetify.breakpoint.xs ? 4 : 3">
@@ -131,7 +131,7 @@
                           type="text"
                           prepend-icon="mdi-phone"
                         />
-                        <span> {{ errors[0] }}</span>
+                        <span class="red--text"> {{ errors[0] }}</span>
                       </validation-provider>
                     </v-col>
                   </v-row>

@@ -5,9 +5,9 @@
         <v-btn @click="close" icon><v-icon>mdi-close</v-icon></v-btn>
       </div>
       <p class="red--text" v-if="isError">Veuillez corrigez l'email ou le mot de pass.</p>
-      <validation-observer v-slot="{ invalid }">
-        <form @submit.prevent="submit">
-          <validation-provider rules="email" name="Email" v-slot="{ errors }">
+      <validation-observer>
+        <form ref="myForm">
+          <validation-provider rules="required|email" name="Email" v-slot="{ errors }">
             <v-text-field
               v-model="email"
               class="inputs"
@@ -15,10 +15,10 @@
               label="Email"
               type="text"
             />
-            <span> {{ errors[0] }}</span>
+            <span class="red--text"> {{ errors[0] }}</span>
           </validation-provider>
           <validation-provider
-            rules="alphaNum"
+            rules="required|alphaNum"
             name="Password"
             v-slot="{ errors }"
           >
@@ -31,16 +31,16 @@
               :type="show1 ? 'text' : 'password'"
               @click:append="show1 = !show1"
             />
-            <span> {{ errors[0] }}</span>
+            <span class="red--text"> {{ errors[0] }}</span>
           </validation-provider>
 
           <v-btn
             class="btn"
-            :disabled="invalid"
+            :disabled="loading"
             :loading="loading"
             raised
             color="primary"
-            @click="Submit"
+            @click="Submit(validate)"
             >Soumettre</v-btn
           >
         </form>

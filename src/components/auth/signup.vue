@@ -20,8 +20,8 @@
                 label="Email"
                 type="text"
               />
-              <span> {{ errors[0] }}</span>
-              <span>{{ error.email[0] }}</span>
+              <span class="red--text"> {{ errors[0] }}</span>
+              <span class="red--text">{{ error.email[0] }}</span>
             </validation-provider>
             <validation-observer v-if="!userInfoToEdit">
               <div class="d-flex">
@@ -37,8 +37,8 @@
                     label="Mot de pass"
                     type="password"
                   />
-                  <span> {{ errors[0] }}</span>
-                  <span>{{ error.password[0] }}</span>
+                  <span class="red--text"> {{ errors[0] }}</span>
+                  <span class="red--text">{{ error.password[0] }}</span>
                 </validation-provider>
                 <validation-provider vid="confirm" v-slot="{ errors }">
                   <v-text-field
@@ -48,7 +48,7 @@
                     type="password"
                   />
 
-                  <span> {{ errors[0] }}</span>
+                  <span class="red--text"> {{ errors[0] }}</span>
                 </validation-provider>
               </div>
             </validation-observer>
@@ -64,8 +64,8 @@
                 label="N° Téléphone"
                 type="text"
               />
-              <span> {{ errors[0] }}</span>
-              <span>{{ error.phone[0] }}</span>
+              <span class="red--text"> {{ errors[0] }}</span>
+              <span class="red--text">{{ error.phone[0] }}</span>
             </validation-provider>
             <v-row>
               <v-spacer></v-spacer>

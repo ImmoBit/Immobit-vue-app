@@ -72,8 +72,8 @@ extend('sellPrice', {
 
 extend('sellPriceB', {
   validate(value) {
-    return  /[0-9]+,{0,3}[0-9]+/.test(value.toString())
-    && Number(value.toString().replace(/\s+/g, "")) > 0 && Number(value.toString().replace(/\s+/g, "")) < 999 ;
+    return  /[0-9]+/.test(value.toString())
+    && Number(value.toString().replace(/\s+/g, "")) > 0 && Number(value.toString().replace(/\s+/g, "")) < 50 ;
   },
   message: 'entre 0 et 100'
 });
