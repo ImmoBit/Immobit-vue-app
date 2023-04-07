@@ -1,7 +1,7 @@
 <template>
   <v-container ref="card" :class="`mt-16 ${loading ? 'loading':''} ${$vuetify.breakpoint.xs ? 'px-0 my-0': ''}`">
     <div class="headline pa-4 text--secondary">
-      {{ pagesCount }} annonce(s) trouvées {{ address ? `à ${address}`: `` }}
+      {{ housesCount }} annonce(s) trouvées {{ address ? `à ${address}`: `` }}
     </div>
     <v-row style="min-height: 300px" no-gutters>
       <v-col v-if="!$vuetify.breakpoint.xs" cols="7" align="start"> 
@@ -43,6 +43,9 @@ export default {
     loading: false
   }),
   computed: {
+    housesCount(){
+      return this.$store.state.search.housesCount;
+    },
     pagesCount(){
       return this.$store.getters.PAGE_COUNT;
     },
