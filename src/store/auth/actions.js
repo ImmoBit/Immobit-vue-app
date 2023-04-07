@@ -76,7 +76,6 @@ export default {
       }
       commit("setFormErrors", formErrors);
     }
-
   },
   async socialLogin({ commit, dispatch, state }, access_token) {
     var res = await socialAuthReqs.socialSignIn(access_token);

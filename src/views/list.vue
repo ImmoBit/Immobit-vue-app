@@ -1,7 +1,7 @@
 <template>
   <v-container ref="card" :class="`mt-16 ${loading ? 'loading':''} ${$vuetify.breakpoint.xs ? 'px-0 my-0': ''}`">
     <div class="headline pa-4 text--secondary">
-      {{ houses.length }} annonce(s) trouvées {{ address ? `à ${address}`: `` }}
+      {{ pagesCount }} annonce(s) trouvées {{ address ? `à ${address}`: `` }}
     </div>
     <v-row style="min-height: 300px" no-gutters>
       <v-col v-if="!$vuetify.breakpoint.xs" cols="7" align="start"> 
