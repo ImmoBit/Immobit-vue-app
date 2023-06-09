@@ -43,7 +43,7 @@
         </div>
         <!-- Price -->
         <div class="d-flex flex-column justify-center">
-          <v-menu nudge-width="50" :close-on-content-click="false" offset-y>
+          <v-menu nudge-width="150" :close-on-content-click="false" offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="ml-2"
@@ -57,26 +57,19 @@
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
-            <v-list class="ma-0 pa-0">                    
-              <v-radio-group v-model="selectedRange">
-                <v-list-item
-                  class="my-0 py-0"
-                  v-for="(priceRange, i) in priceRanges"
-                  :key="i"
-                >
-                  <v-list-item-content class="ma-0 pa-0">
-                    <v-list-item-action class="ma-0 pa-0">
-                        <v-radio
-                          class="radioInput"
-                          :label="priceRange.min + ' - ' + priceRange.max + ` ${paymentFormat}`"
-                          :value="priceRange"
-                        >
-                        </v-radio>
-                    </v-list-item-action>
-                  </v-list-item-content>
-                </v-list-item>
+            <v-card class="pa-2">
+              <v-radio-group hide-details v-model="selectedIndexRange">
+                <div class="radioInput d-flex align-center pa-1 justify-between" v-for="(n, i) in priceRanges" :key="i">
+                  <v-radio
+                    class="radioInput mb-2"
+                    :label="' '+priceRanges[i].min + ' - ' + priceRanges[i].max + ` ${paymentFormat}`"
+                    :value="i"
+                  >
+                  </v-radio>
+                  <v-btn color="#E57373" class="ml-2 align-self-start pa-0 ma-0" x-small v-if="i==selectedIndexRange" @click="selectedIndexRange = null" icon><v-icon>mdi-close</v-icon></v-btn>
+                </div>
               </v-radio-group>
-            </v-list>
+            </v-card>
           </v-menu>
         </div>
       </v-row>
@@ -107,7 +100,7 @@ export default {
     roomsItems: ['1/Studio', '2', '3', '4', '5', '6', '7', '8'],
     selectedRooms: [],
     chipsRooms: [],
-    selectedRange: null,
+    selectedIndexRange: null,
     chipPrice: null,
     priceRanges: [
       { min: "0", max: "30 000" },
@@ -125,6 +118,9 @@ export default {
     },
     route(){
       return this.$route.fullPath
+    },
+    selectedRange(){
+      return this.priceRanges[this.selectedIndexRange]
     },
     selectedFilters() {
       let filtersStr = ""
@@ -161,16 +157,15 @@ export default {
       this.chipsRooms = [...this.selectedRooms]
     }
     if(price_gte && price_lte){
-      this.selectedRange = {
-        min: formatPrice(price_gte) || '0',
-        max: formatPrice(price_lte) 
-      }
+      // GET index of the right price range
+      this.selectedIndexRange = this.priceRanges.indexOf(this.priceRanges.find(item => item.min[0] === price_gte[0]))
       this.chipPrice = {...this.selectedRange}
     }
   },
   methods: {
     async filterHouses() { 
       this.loading = true
+      this.$store.commit("SET_PAGE", 1);
       this.$store.commit("SET_FILTER_SEARCH", this.selectedFilters)
       this.chipsRooms = [...this.selectedRooms]
       this.chipPrice = this.selectedRange
@@ -206,5 +201,8 @@ export default {
 .v-btn {
   text-transform: none;
   margin-right: 12px;
+}
+.radioInput{
+  width: 15rem;
 }
 </style>
