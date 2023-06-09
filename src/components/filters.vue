@@ -174,12 +174,13 @@ export default {
   },
   watch:{
     selectedFilters(){
-    if (this.timeout) {
+    this.filterHouses();
+    /*if (this.timeout) {
       clearTimeout(this.timeout);
     }
     this.timeout = setTimeout(() => {
       this.filterHouses();
-    }, 1000); 
+    }, 1000); */
     },
     route() {
       //TO BE REFACTORED
