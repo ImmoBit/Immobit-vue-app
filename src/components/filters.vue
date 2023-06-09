@@ -66,25 +66,29 @@
                     :value="i"
                   >
                   </v-radio>
-                  <v-btn color="#E57373" class="ml-2 align-self-start pa-0 ma-0" x-small v-if="i==selectedIndexRange" @click="selectedIndexRange = null" icon><v-icon>mdi-close</v-icon></v-btn>
+                  <v-btn class="ml-2 align-self-start pa-0 ma-0" x-small
+                    v-if="i==selectedIndexRange" @click="selectedIndexRange = null" icon>
+                      <v-icon>mdi-close</v-icon>
+                  </v-btn>
                 </div>
               </v-radio-group>
             </v-card>
           </v-menu>
         </div>
       </v-row>
-      <v-row no-gutters>
+      <v-row class="pt-2" no-gutters>
         <div class="rooms-chips mr-6">
-          <v-chip class="px-2 mx-1" outlined v-for="(chipRooms,i) in chipsRooms.slice(0,2)" x-small :key="i">
-            <span>{{ chipRooms }}</span>
+          <v-chip 
+              v-if="selectedRooms.length" class="px-2 mx-1" outlined small :key="i"
+              close close-icon="mdi-close" @click:close="selectedRooms = []">
+            <span>{{ selectedRooms.join(', ') }} Chambres</span>
           </v-chip>  
-          <span v-if="chipsRooms.length >= 3" class="grey--text caption">
-            (+{{ chipsRooms.length - 2 }})
-          </span>
         </div>  
         <div class="price-chip">
-          <v-chip outlined v-if="chipPrice" x-small>
-            <span>{{ chipPrice.min }} - {{ chipPrice.max }} {{paymentFormat}}</span>
+          <v-chip 
+              v-if="selectedRange" outlined small 
+              close close-icon="mdi-close" @click:close="selectedIndexRange = null"> 
+            <span>{{ selectedRange.min }} - {{ selectedRange.max }} {{paymentFormat}}</span>
           </v-chip>
         </div>
       </v-row>
@@ -93,15 +97,13 @@
 </template>
 
 <script>
-import formatPrice from '../assets/formatPrice';
+//import formatPrice from '../assets/formatPrice';
 export default {
   data: () => ({
     tags: [],
     roomsItems: ['1/Studio', '2', '3', '4', '5', '6', '7', '8'],
     selectedRooms: [],
-    chipsRooms: [],
     selectedIndexRange: null,
-    chipPrice: null,
     priceRanges: [
       { min: "0", max: "30 000" },
       { min: "30 000", max: "50 000" },
@@ -116,11 +118,8 @@ export default {
     searchStr() {
       return this.$store.state.search.searchQuery;
     },
-    route(){
-      return this.$route.fullPath
-    },
     selectedRange(){
-      return this.priceRanges[this.selectedIndexRange]
+      return this.priceRanges[this.selectedIndexRange] || null
     },
     selectedFilters() {
       let filtersStr = ""
@@ -154,12 +153,10 @@ export default {
     const {rooms, price_gte,  price_lte} = this.$route.query
     if(rooms){
       this.selectedRooms = [...rooms]
-      this.chipsRooms = [...this.selectedRooms]
     }
     if(price_gte && price_lte){
       // GET index of the right price range
       this.selectedIndexRange = this.priceRanges.indexOf(this.priceRanges.find(item => item.min[0] === price_gte[0]))
-      this.chipPrice = {...this.selectedRange}
     }
   },
   methods: {
@@ -167,8 +164,6 @@ export default {
       this.loading = true
       this.$store.commit("SET_PAGE", 1);
       this.$store.commit("SET_FILTER_SEARCH", this.selectedFilters)
-      this.chipsRooms = [...this.selectedRooms]
-      this.chipPrice = this.selectedRange
       this.loading = false
     }
   },
@@ -181,19 +176,6 @@ export default {
     this.timeout = setTimeout(() => {
       this.filterHouses();
     }, 1000); */
-    },
-    route() {
-      //TO BE REFACTORED
-      const {rooms, price_gte, price_lte} = this.$route.query
-      if(rooms) {
-        this.chipsRooms = rooms
-      }
-      if(price_gte && price_lte) {
-        this.chipPrice = {
-          min: formatPrice(price_gte) || '0',
-          max: formatPrice(price_lte) 
-        }
-      }    
     }
   }
 };
