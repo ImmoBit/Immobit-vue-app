@@ -1,24 +1,20 @@
 <template>
-  <v-card elevation="1">  
-    <v-carousel height="350" hide-delimiters> 
-      <v-carousel-item
-        v-for="(image, i) in images"
-        :key="i"
-        :src="image"
-      >
-      </v-carousel-item>
-      <div @click="goHousePage" class="carousel-container d-flex flex-column justify-space-between">
-        <v-btn class="align-self-end" @click.stop="updateSavedHouse" large icon dark>
-          <v-icon class="pa-4">
-            {{ saved ? "mdi-heart" : "mdi-heart-outline" }}
-          </v-icon>
-        </v-btn>
-        <div class="price white--text d-flex pa-2">
-          <div class="title font-weight-bold ml-2">• {{ price }}</div>
-          <div class="caption align-self-end ml-1 mb-1">{{ house.paymentFormat }}</div>
-        </div>
+  <v-card class="card" elevation="1">  
+    <div class="slider-wrapper">
+      <div class="slider">
+        <img class="item" v-for="(image, i) in images" :key="i" :src="image">
       </div>
-    </v-carousel>
+      <v-btn class="heart-btn align-self-end" @click.stop="updateSavedHouse" large icon dark>
+        <v-icon class="pa-4">
+          {{ saved ? "mdi-heart" : "mdi-heart-outline" }}
+        </v-icon>
+      </v-btn>
+      <div class="price white--text d-flex pa-2">
+        <div class="title font-weight-bold ml-2">• {{ price }}</div>
+        <div class="caption align-self-end ml-1 mb-1">{{ house.paymentFormat }}</div>
+      </div>
+    </div>
+
     <v-card-text @click="goHousePage" class="text--primary pb-0">
       <div class="body-1 font-weight-medium">
         <v-icon>mdi-map-marker</v-icon>{{ address }}
@@ -124,13 +120,37 @@ export default {
 </script>
 
 <style>
-.carousel-container {
-  width: 100%;
-  height: 100%;
-  position: absolute;
+.slider {
+  overflow-x: scroll;
+  display: flex;
+  scroll-snap-type: x mandatory;
 }
+
+.slider-wrapper {
+  position: relative;
+}
+
+.heart-btn {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  top: 0;
+  right: 0;
+}
+
 .price {
   width: 100%;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(255, 255, 255, 0));
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+}
+
+.item {
+  min-width: 100%;
+  height: 350px;
+  scroll-snap-align: end;
 }
 </style>

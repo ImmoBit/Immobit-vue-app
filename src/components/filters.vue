@@ -86,7 +86,7 @@
         </div>  
         <div class="price-chip">
           <v-chip 
-              v-if="selectedRange" outlined small 
+              v-if="selectedRange" outlined small
               close close-icon="mdi-close" @click:close="selectedIndexRange = null"> 
             <span>{{ selectedRange.min }} - {{ selectedRange.max }} {{paymentFormat}}</span>
           </v-chip>

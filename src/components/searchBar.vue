@@ -1,9 +1,8 @@
 <template>
   <validation-observer v-slot="{ invalid }">
-  <v-container>
-    <v-sheet style="border-radius: 25px;" elevation="2" color="white">
+  <v-container fluid class="searchBar">
       <v-row>
-        <v-container class="px-7">
+        <v-container fluid class="px-7">
           <v-row>
             <v-col :cols="isPhone ? 12 : 6">
               <validation-provider rules="required">
@@ -17,6 +16,7 @@
                   filled
                   dense
                   rounded
+                  solo
                   :items="wilNames"
                   v-model="wilaya"
                 >
@@ -35,6 +35,7 @@
                 dense
                 filled
                 rounded
+                solo
                 :disabled="!dairasItems.length"
                 multiple
                 :items="dairasItems"
@@ -53,6 +54,7 @@
                   filled
                   dense
                   rounded
+                  solo
                   small-chips
                   multiple
                   :items="types"
@@ -103,7 +105,6 @@
           </v-btn>
         </v-col>
       </v-row>
-    </v-sheet>
   </v-container>
   </validation-observer>
 </template>
@@ -206,4 +207,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+  .searchBar{
+    background: rgba(255, 255, 255, 0.80);
+    border-radius: 25px;
+  }
+  </style>

@@ -1,10 +1,6 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col align="center">          
-        <img :src="immoArab" height="200">
-      </v-col>
-    </v-row>
+  <v-container fluid class="background">
+    <v-spacer style="height: 215px;"></v-spacer>
     <v-row>
       <v-col class="mx-auto" :cols="$vuetify.breakpoint.xs ? 11 : 7">
         <search-bar></search-bar>
@@ -15,7 +11,7 @@
 
 <script>
 import searchBar from "../components/searchBar.vue";
-
+//#F8DCBF
 export default {
   components: {
     "search-bar": searchBar,
@@ -26,6 +22,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.background{
+  background-image: url('../assets/background.png');
+  @include desktop{
+    background-image: url('../assets/background-desktop.png');
+  }
+  background-size: cover;
+  height: 100%;
+}
 </style>

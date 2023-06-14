@@ -122,7 +122,7 @@
       </v-container>
     </v-app-bar>
 
-    <v-main class="mb-12">
+    <v-main>
       <filters-card v-if="isListPage" class="filters-card"></filters-card>
       <transition name="slide-fade" mode="out-in">
         <router-view></router-view>
