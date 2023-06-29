@@ -73,33 +73,36 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-row>
-      <v-row no-gutters justify="center">
-        <v-col class="d-flex justify-center mt-3">
-          <v-radio-group row hide-details v-model="transactionIndex">
-            <v-radio
-              v-for="(type, i) in ['Location', 'Achat']"
-              class="mr-3"
-              :key="i"
-              :label="type"
-              :value="i+1"
-              color="primary"
-            ></v-radio>
-          </v-radio-group>
-        </v-col>
-      </v-row>
-      <v-row no-gutters justify="center">
-        <v-col class="d-flex justify-center">
-          <v-radio-group class="ma-0" row hide-details v-model="transactionIndex">
-            <v-radio
-              class="mt-2"
-              label="Vacance"
-              :value="3"
-              color="orange"
-            ></v-radio>
-        </v-radio-group>
-        </v-col>
-      </v-row>
+      </v-row>        
+      <validation-provider rules="required">
+        <v-row no-gutters justify="center">
+          <v-col class="d-flex justify-center mt-3">
+            <v-radio-group row hide-details v-model="transactionIndex">
+              <v-radio
+                v-for="(type, i) in ['Location', 'Achat']"
+                class="mr-3"
+                mandatory
+                :key="i"
+                :label="type"
+                :value="i+1"
+                color="primary"
+              ></v-radio>
+            </v-radio-group>
+          </v-col>
+        </v-row>
+        <v-row no-gutters justify="center">
+          <v-col class="d-flex justify-center">
+            <v-radio-group class="ma-0" row hide-details v-model="transactionIndex">
+              <v-radio
+                class="mt-2"
+                label="Vacance"
+                :value="3"
+                color="orange"
+              ></v-radio>
+            </v-radio-group>
+          </v-col>
+        </v-row>
+      </validation-provider>
       <v-row class="mt-2">
         <v-col align="center">
           <v-btn
@@ -133,8 +136,7 @@ export default {
     wilaya: "",
     dairasItems: [],
     dairas: [],
-    transactionIndex: 0,
-    loading: false
+    transactionIndex: 1,
   }),
   created() {
     this.selectedTypes = this.types
@@ -145,7 +147,6 @@ export default {
   },
   methods: {
     async searchState() {
-      this.loading = true;    
       this.$store.commit("loadStart");
       var searchStr = [];
 
