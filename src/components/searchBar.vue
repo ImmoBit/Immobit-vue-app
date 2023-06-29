@@ -1,7 +1,6 @@
 <template>
   <validation-observer v-slot="{ invalid }">
-  <v-container>
-    <v-sheet style="border-radius: 25px;" elevation="2" color="white">
+    <v-container fluid class="searchBar">
       <v-row>
         <v-container class="px-7">
           <v-row>
@@ -116,8 +115,7 @@
           </v-btn>
         </v-col>
       </v-row>
-    </v-sheet>
-  </v-container>
+     </v-container>
   </validation-observer>
 </template>
 
@@ -222,4 +220,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.searchBar{
+  background: rgb(255, 255, 255);
+  border-radius: 25px;
+}
+</style>
