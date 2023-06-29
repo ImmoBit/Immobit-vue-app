@@ -53,7 +53,7 @@ extend('rentPriceDay', {
     return /[0-9]+/.test(value.toString().replace(/\s+/g, "")) 
     && Number(value.toString().replace(/\s+/g, "")) > 1000 && Number(value.toString().replace(/\s+/g, "")) < 100000 ;
   },
-  message: 'entre 10 00 دج et 100 000 دج'
+  message: 'entre 1 000 دج et 100 000 دج'
 });
 extend('rentPriceMonth', {
   validate(value) {
@@ -65,9 +65,9 @@ extend('rentPriceMonth', {
 extend('sellPrice', {
   validate(value) {
     return /[0-9]+/.test(value.toString().replace(/\s+/g, "")) 
-    && Number(value.toString().replace(/\s+/g, "")) > 0 && Number(value.toString().replace(/\s+/g, "")) < 999 ;
+    && Number(value.toString().replace(/\s+/g, "")) > 100 && Number(value.toString().replace(/\s+/g, "")) < 999 ;
   },
-  message: 'entre 0 et 999'
+  message: 'entre 100 et 999'
 });
 
 extend('sellPriceB', {

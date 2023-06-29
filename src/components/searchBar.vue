@@ -72,17 +72,30 @@
           </v-row>
         </v-container>
       </v-row>
-      <v-row>
-        <v-col class="py-0" align="center">
-          <v-radio-group class="mt-0" hide-details v-model="transaction">
+      <v-row no-gutters justify="center">
+        <v-col class="d-flex justify-center mt-3">
+          <v-radio-group row hide-details v-model="transactionIndex">
             <v-radio
               v-for="(type, i) in ['Location', 'Achat']"
+              class="mr-3"
               :key="i"
-              :class="i == 0 ? 'mx-auto' : 'pr-5 mx-auto'"
               :label="type"
-              :value="type"
+              :value="i+1"
+              color="primary"
             ></v-radio>
           </v-radio-group>
+        </v-col>
+      </v-row>
+      <v-row no-gutters justify="center">
+        <v-col class="d-flex justify-center">
+          <v-radio-group class="ma-0" row hide-details v-model="transactionIndex">
+            <v-radio
+              class="mt-2"
+              label="Vacance"
+              :value="3"
+              color="orange"
+            ></v-radio>
+        </v-radio-group>
         </v-col>
       </v-row>
       <v-row class="mt-2">
@@ -119,7 +132,7 @@ export default {
     wilaya: "",
     dairasItems: [],
     dairas: [],
-    transaction: "Location",
+    transactionIndex: 0,
     loading: false
   }),
   created() {
@@ -147,8 +160,11 @@ export default {
       for (const daira of this.dairas) {
         searchStr += "&daira=" + daira
       }
-      if(this.transaction)  {
-        const transactionEn = this.transaction === 'Location' ? 'rent' : this.transaction === 'Achat' ?  'buy' : ''
+      if(this.transactionIndex)  {
+        const transactionEn = 
+          this.transactionIndex === 1 ? 'rent' : 
+          this.transactionIndex === 2 ? 'buy' : 
+          this.transactionIndex === 3 ? 'vacation' : ''
         searchStr += "&transaction=" + transactionEn
       }
       

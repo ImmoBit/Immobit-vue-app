@@ -1,6 +1,6 @@
 <template>
-  <validation-observer v-slot="{ invalid }">
-    <form @submit.prevent="submit">
+  <validation-observer v-slot="{ handleSubmit }">
+    <form @submit.prevent="handleSubmit(onSubmit)">
       <v-card elevation="1">
         <v-card-text class="pa-0 ma-0">
           <v-container class="px-0">
@@ -10,20 +10,24 @@
               <v-col :cols="$vuetify.breakpoint.xs ? 12 : 6">
                 <v-container>
                   <v-row>
-                    <v-col cols="6">
-                      <v-radio-group class="d-flex flex-row" v-model="transaction">
-                        <v-radio
-                          v-for="(type, i) in ['Location', 'Vente']"
-                          :key="i"
-                          :label="type"
-                          :value="type"
-                        ></v-radio>
-                      </v-radio-group>
+                    <v-col>
+                      <validation-provider v-slot="{ errors }" rules="required">
+                        <v-radio-group class="mt-0" row hide-details v-model="transactionIndex">
+                          <v-radio
+                            v-for="(type, i) in ['Location', 'Achat', 'Vacance']"
+                            :key="i"
+                            :label="type"
+                            :value="i + 1"
+                            :color="`${i !== 2 ? 'primary' : 'orange'}`"
+                          ></v-radio>
+                        </v-radio-group>
+                        <span class="red--text"> {{ errors[0] }}</span>
+                    </validation-provider>
                     </v-col>                  
                   </v-row>
                   <v-row no-gutters>
                     <v-col>
-                      <validation-provider rules="required">
+                      <validation-provider v-slot="{ errors }" rules="required">
                         <v-select
                           :items="types"
                           v-model="house.type"
@@ -31,10 +35,11 @@
                           prepend-icon="mdi-home-city"
                         >
                         </v-select>
+                        <span class="red--text"> {{ errors[0] }}</span>
                       </validation-provider>
                     </v-col>
                     <v-col>
-                      <validation-provider :rules="{required: house.type !== 'Studio'}">
+                      <validation-provider v-slot="{ errors }" :rules="{required: house.type !== 'Studio'}">
                         <v-select
                           :items="roomsItems"
                           v-model="house.rooms"
@@ -43,12 +48,13 @@
                           :disabled="house.type === 'Studio'"
                         >
                         </v-select>
+                        <span class="red--text"> {{ errors[0] }}</span>
                       </validation-provider>
                     </v-col>
                   </v-row>
                   <v-row no-gutters>
                     <v-col :cols="$vuetify.breakpoint.xs ? 12 : 6">
-                      <validation-provider rules="required">
+                      <validation-provider v-slot="{ errors }"  rules="required">
                         <v-select
                           :items="wilNames"
                           v-model="house.city"
@@ -56,10 +62,11 @@
                           prepend-icon="mdi-map-marker"
                         >
                         </v-select>
+                        <span class="red--text"> {{ errors[0] }}</span>
                       </validation-provider>
                     </v-col>
                     <v-col>
-                      <validation-provider name="daira" rules="required">
+                      <validation-provider v-slot="{ errors }" name="daira" rules="required">
                         <v-select
                           :items="dairaItems"
                           v-model="house.daira"
@@ -67,6 +74,7 @@
                           label="Daira"
                           prepend-icon="mdi-map-marker-plus"
                         />
+                        <span class="red--text"> {{ errors[0] }}</span>
                       </validation-provider>
                     </v-col>
                   </v-row>
@@ -91,10 +99,10 @@
                         name="price"
                         v-slot="{ errors }"
                         :rules="{ required: true, 
-                                rentPriceDay: transaction === 'Location' && rentPaymentType === 'دج/jour',
-                                rentPriceMonth: transaction === 'Location' && rentPaymentType === 'دج/mois',
-                                sellPrice: transaction === 'Vente' && sellPaymentType !== 'مليار دج',
-                                sellPriceB: transaction === 'Vente' && sellPaymentType === 'مليار دج' }"
+                                rentPriceDay: (transaction === 'rent' || transaction === 'vacation') && rentPaymentType === 'دج/jour',
+                                rentPriceMonth: transaction === 'rent' && rentPaymentType === 'دج/mois',
+                                sellPrice: transaction === 'sell' && sellPaymentType !== 'مليار دج',
+                                sellPriceB: transaction === 'sell' && sellPaymentType === 'مليار دج' }"
                       >
                         <v-text-field
                           v-model="house.price"
@@ -106,14 +114,21 @@
                       </validation-provider>
                     </v-col>
                     <v-col :cols="$vuetify.breakpoint.xs ? 4 : 3">
-                      <v-select v-if="transaction === 'Vente'"
-                        :items="sellPaymentItems"
-                        v-model="sellPaymentType"
-                      ></v-select>
-                      <v-select v-else
-                        :items="rentPaymentItems"
-                        v-model="rentPaymentType"
-                      ></v-select>
+                      <validation-provider v-slot="{ errors }" rules="required" name="payment">
+                        <v-select v-if="transaction === 'buy'"
+                          :items="sellPaymentItems"
+                          v-model="sellPaymentType"
+                        ></v-select>
+                        <v-select v-else-if="transaction === 'rent'"
+                          :items="rentPaymentItems"
+                          v-model="rentPaymentType"
+                        ></v-select>
+                        <v-select v-else
+                          :items="[rentPaymentItems[0]]"
+                          v-model="rentPaymentType"
+                        ></v-select>
+                        <span class="red--text"> {{ errors[0] }}</span>
+                    </validation-provider>
                     </v-col>
                   </v-row>
                   <!--phone area-->
@@ -150,7 +165,7 @@
                     type="text"
                   />
                 </validation-provider>
-                <validation-provider name="files" :rules="{ required, filesNumber }">
+                <validation-provider v-slot="{ errors }" name="files" :rules="{ required, filesNumber }">
                   <v-file-input
                     ref="fileInput"
                     :value="files"
@@ -186,6 +201,7 @@
                       </span>
                     </template>
                   </v-file-input>
+                  <span class="red--text"> {{ errors[0] }}</span>
                 </validation-provider>
                 <v-card
                   :class="!$vuetify.breakpoint.xs ? 'ml-12' : ''"
@@ -223,7 +239,7 @@
               type="error"
             >
             Votre annonce n'a pas été publiée. Veuillez réessayez.</v-alert>
-            <v-btn class="ma-5" @click="submit" :disabled="invalid" :loading="loading" raised color="primary"
+            <v-btn class="ma-5" type="submit" :disabled="loading" :loading="loading" raised color="primary"
             >Publier</v-btn>
            <v-dialog
               v-model="loading"
@@ -280,9 +296,9 @@ export default {
     wilNames: [],
     dairaItems: [],
     rentPaymentItems: ["دج/jour", "دج/mois"],
-    rentPaymentType: "دج/mois",
+    rentPaymentType: null,
     sellPaymentItems: ["مليار دج", "مليون دج"],
-    sellPaymentType: "مليون دج",
+    sellPaymentType: null,
     files: [],
     imgsSrc: [],
     house: {
@@ -298,7 +314,7 @@ export default {
       paymentFormat: '',
       phone: null
     },
-    transaction: "Location",
+    transactionIndex: null,
     editHouse: false,
     loading: false,
     imagesRules: [
@@ -344,6 +360,11 @@ export default {
     },
     wilaya() {
       return this.house.city.slice(4).trimStart() || null
+    },
+    transaction() {
+      return  this.transactionIndex === 1 ? 'rent' : 
+              this.transactionIndex === 2 ? 'buy' : 
+              this.transactionIndex === 3 ? 'vacation' : ''
     }
   },
   methods: {
@@ -393,7 +414,7 @@ export default {
         }
       }
     },
-    async submit() {
+    async onSubmit() {
       this.loading = true
       let images = [];
       const uploadURL0 =
@@ -426,15 +447,19 @@ export default {
       let house = {
         ...this.house
       }
-      house.transaction = this.transaction === 'Location' ? 'rent' : 'buy';
-      house.paymentFormat = this.transaction === 'Location' ? this.rentPaymentType : this.sellPaymentType;
-      house.city = house.city.slice(4).trimStart();
+      if(this.transaction)  {
+        house.transaction = this.transaction
+      }
+      house.paymentFormat = this.transactionIndex === 1 || this.transactionIndex === 3 ? this.rentPaymentType : 
+                            this.transactionIndex === 2 ? this.sellPaymentType : ''
+      house.city = this.wilaya;
       if(!house.rooms){
         house.rooms = 1
       }
       house.images = images;
 
       if (!this.houseToEdit) {
+        console.log(house);
         await axios
           .post("/house-create/", house)
           .then(res => console.log(res))
@@ -462,7 +487,7 @@ export default {
         if(this.$route.path.includes('create-property')){
           this.$router.push('/admin')
         }
-      }, 2000); 
+      }, 2000);
     }
   },
   watch: {
@@ -480,6 +505,15 @@ export default {
         for (let index = 0; index < dairaItems.length; index++) {
           this.dairaItems.push(dairaItems[index].name);
         }
+      }
+    },
+    transaction(val){
+      if(val === 'vacation'){
+        this.rentPaymentType = this.rentPaymentItems[0]
+      } else if (val === 'rent'){
+        this.rentPaymentType = this.rentPaymentItems[1]
+      } else if (val === 'buy'){
+        this.sellPaymentType = this.sellPaymentItems[1]
       }
     }
   }
