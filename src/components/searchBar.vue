@@ -1,10 +1,6 @@
 <template>
   <validation-observer v-slot="{ invalid }">
-<<<<<<< HEAD
-    <v-container fluid class="searchBar">
-=======
   <v-container fluid class="searchBar">
->>>>>>> IMB-17_adjust_filters
       <v-row>
         <v-container fluid class="px-7">
           <v-row>
@@ -122,11 +118,7 @@
           </v-btn>
         </v-col>
       </v-row>
-<<<<<<< HEAD
-     </v-container>
-=======
   </v-container>
->>>>>>> IMB-17_adjust_filters
   </validation-observer>
 </template>
 
@@ -232,16 +224,8 @@ export default {
 </script>
 
 <style>
-<<<<<<< HEAD
-.searchBar{
-  background: rgb(255, 255, 255);
-  border-radius: 25px;
-}
-</style>
-=======
   .searchBar{
     background: rgba(255, 255, 255, 0.80);
     border-radius: 25px;
   }
   </style>
->>>>>>> IMB-17_adjust_filters
