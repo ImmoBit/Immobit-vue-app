@@ -1,8 +1,12 @@
 <template>
   <validation-observer v-slot="{ invalid }">
+<<<<<<< HEAD
     <v-container fluid class="searchBar">
+=======
+  <v-container fluid class="searchBar">
+>>>>>>> IMB-17_adjust_filters
       <v-row>
-        <v-container class="px-7">
+        <v-container fluid class="px-7">
           <v-row>
             <v-col :cols="isPhone ? 12 : 6">
               <validation-provider rules="required">
@@ -16,6 +20,7 @@
                   filled
                   dense
                   rounded
+                  solo
                   :items="wilNames"
                   v-model="wilaya"
                 >
@@ -34,6 +39,7 @@
                 dense
                 filled
                 rounded
+                solo
                 :disabled="!dairasItems.length"
                 multiple
                 :items="dairasItems"
@@ -52,6 +58,7 @@
                   filled
                   dense
                   rounded
+                  solo
                   small-chips
                   multiple
                   :items="types"
@@ -115,7 +122,11 @@
           </v-btn>
         </v-col>
       </v-row>
+<<<<<<< HEAD
      </v-container>
+=======
+  </v-container>
+>>>>>>> IMB-17_adjust_filters
   </validation-observer>
 </template>
 
@@ -221,8 +232,16 @@ export default {
 </script>
 
 <style>
+<<<<<<< HEAD
 .searchBar{
   background: rgb(255, 255, 255);
   border-radius: 25px;
 }
 </style>
+=======
+  .searchBar{
+    background: rgba(255, 255, 255, 0.80);
+    border-radius: 25px;
+  }
+  </style>
+>>>>>>> IMB-17_adjust_filters
